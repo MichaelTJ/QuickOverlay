@@ -1,0 +1,16 @@
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\bin\Debug\SydneyOverlay.exe.config
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\bin\Debug\SydneyOverlay.exe
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\bin\Debug\SydneyOverlay.pdb
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\AUSROVOverlay.csprojResolveAssemblyReference.cache
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\MainWindow.baml
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\MainWindow.g.cs
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\App.g.cs
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\SydneyOverlay_MarkupCompile.cache
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\SydneyOverlay.g.resources
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\SydneyOverlay.Properties.Resources.resources
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\AUSROVOverlay.csproj.GenerateResource.Cache
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\SydneyOverlay.exe
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\SydneyOverlay.pdb
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\bin\Debug\System.Windows.Controls.Input.Toolkit.dll
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\bin\Debug\System.Windows.Controls.Layout.Toolkit.dll
+c:\users\sandy\documents\visual studio 2013\Projects\SydneyOverlay\SydneyOverlay\bin\Debug\WPFToolkit.dll
