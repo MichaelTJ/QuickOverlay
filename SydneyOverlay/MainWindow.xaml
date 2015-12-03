@@ -1,8 +1,12 @@
 ﻿<Window x:Class="SydneyOverlay.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="500" Width="525"
-        WindowState="Maximized">
+        xmlns:customControls="clr-namespace:CustomXaml"
+        
+        Title="MainWindow" Height="800" Width="525"
+        WindowState="Maximized"
+        AllowDrop="True"
+        Drop="Image_Drop" >
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -39,6 +43,9 @@
             <TextBlock DockPanel.Dock="Top" Text="Comments:" 
                 Margin="10,10,0,0"/>
             <TextBox 
+                Name="CommentsBox"
+                AcceptsReturn="True"
+                TextWrapping="WrapWithOverflow"
                 DockPanel.Dock="Top"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -60,7 +67,37 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="10,10,0,0"
-                Width="200"/>
+                Width="200"
+                Click="Save_Button_Click"/>
+            <Button
+                Content="Discard"
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,10,0,0"
+                Width="200"
+                Click="Discard_Button_Click"/>
+
+            <Border BorderThickness="1" 
+                    BorderBrush="Black"
+                    DockPanel.Dock="Bottom"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Margin="10,10,10,10">
+                <Image AllowDrop="True" 
+                   
+                   Stretch="Fill"
+                   Width="200"
+                   Height="200" />
+            </Border>
+
+
+            <TextBlock DockPanel.Dock="Bottom" Text="Drag and Drop:" 
+                Margin="10,10,0,0"/>
+            <customControls:OutlinedText x:Name="TextContent" Fill="#ffffffff" FontSize="48"     
+Bold="True" Stroke="Black" StrokeThickness="2" Text="Back" Margin="10,10,10,0" 
+HorizontalAlignment="Center" VerticalAlignment="Center" Height="Auto" Width="Auto" Visibility="Hidden"
+                                         Font="Arial"/>
         </DockPanel>
         <Image DockPanel.Dock="Right" Name="imgPhoto" Margin="10,10,10,10"/>
     </DockPanel>

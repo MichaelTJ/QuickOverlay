@@ -21,9 +21,13 @@ namespace SydneyOverlay
             //Check args for image file
             if (e.Args.Length > 0)
             {
-                mainWindow.imgPhoto.Source = new BitmapImage(new Uri(e.Args[0]));
-                mainWindow.uneditedImg.Source = new BitmapImage(new Uri(e.Args[0]));
+                foreach (string s in e.Args)
+                {
+                    mainWindow.filesList.Add(s);
+                }
+                mainWindow.setNextImage();
             }
+
             mainWindow.Show();
         }
     }

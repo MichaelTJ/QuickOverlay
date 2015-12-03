@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace SydneyOverlay
 {
@@ -25,11 +27,12 @@ namespace SydneyOverlay
     {
         //uneditedImg is a holder for the incoming image
         public System.Windows.Controls.Image uneditedImg;
+        public List<string> filesList;
         public MainWindow()
         {
-            uneditedImg = new System.Windows.Controls.Image();   
+            uneditedImg = new System.Windows.Controls.Image();  
+            filesList = new List<string>();
             InitializeComponent();
-
         }
 
         private void ComboBox_Areas_Loaded(object sender, RoutedEventArgs e)
@@ -103,61 +106,138 @@ namespace SydneyOverlay
 
             if(op.ShowDialog()==true)
             {
-                imgPhoto.Source = new BitmapImage(new Uri(op.FileName));
-                uneditedImg.Source = new BitmapImage(new Uri(op.FileName));
+                //add it to files list
+                filesList.Add(op.FileName);
+                setNextImage();
             }
         }
 
         private void WriteComment(System.Windows.Controls.Image image)
         {
+            TextContent.Text = CommentsBox.Text;
             var visual = new DrawingVisual();
+            System.Windows.Media.Pen pen = new System.Windows.Media.Pen(System.Windows.Media.Brushes.Black, 1);
             using(DrawingContext drawingContext = visual.RenderOpen())
             {
                 drawingContext.DrawImage(image.Source, 
                     new Rect(0,0,image.Source.Width,image.Source.Height));
+                drawingContext.DrawGeometry(System.Windows.Media.Brushes.White, pen, TextContent._textGeometry);
+                /*
                 drawingContext.DrawText(
                     new FormattedText("Hi!",System.Globalization.CultureInfo.InvariantCulture
                         ,FlowDirection.LeftToRight,new Typeface("Arial"),20,System.Windows.Media.Brushes.Black),
                         new System.Windows.Point(0, 0));
+                 */
             }
             var newImage = new DrawingImage(visual.Drawing);
             imgPhoto.Source = newImage;
+            
         }
 
         private void Write_Button_Click(object sender, RoutedEventArgs e)
         {
             WriteComment(uneditedImg);
         }
-        /*
-        private void OnPaint(object sender, PaintEventArgs e)
+
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            SaveImageToFile(imgPhoto, filesList[0]);
 
-            SolidBrush brushWhite = new SolidBrush(System.Drawing.Color.White);
-            e.Graphics.FillRectangle(brushWhite, 0, 0,
-            20, 20);
+            //Discard and set over the image
+            filesList.RemoveAt(0);
+            setNextImage();
+        }
+        private void Discard_Button_Click(object sender, RoutedEventArgs e)
+        {
+            //Skip over the image
+            filesList.RemoveAt(0);
+            setNextImage();
+        }
 
-            System.Drawing.FontFamily fontFamily =
-                new System.Drawing.FontFamily("Arial");
-            StringFormat strformat = new StringFormat();
-            string szbuf = "Text Designer";
 
-            GraphicsPath path = new GraphicsPath();
-            path.AddString(szbuf, fontFamily,
-            (int)System.Drawing.FontStyle.Regular, 48.0f, new System.Drawing.Point(10, 10), strformat);
-            Pen pen = new System.Drawing.Pen(Color.FromArgb(234, 137, 6), 6);
-            e.Graphics.DrawPath(pen, path);
-            SolidBrush brush = new SolidBrush(Color.FromArgb(128, 0, 255));
-            e.Graphics.FillPath(brush, path);
+        private static void SaveImageToFile(System.Windows.Controls.Image imageIn, string filePath)
+        {
+            if (imageIn.Source == null) { return; }
+            
+            RenderTargetBitmap rtBmp = new RenderTargetBitmap((int)imageIn.ActualWidth, (int)imageIn.ActualHeight,
+                96.0, 96.0, PixelFormats.Pbgra32);
 
-            brushWhite.Dispose();
-            fontFamily.Dispose();
-            path.Dispose();
-            pen.Dispose();
-            brush.Dispose();
-            e.Graphics.Dispose();
-        }*/
+            imageIn.Measure(new System.Windows.Size((int)imageIn.ActualWidth, (int)imageIn.ActualHeight));
+            imageIn.Arrange(new Rect(new System.Windows.Size((int)imageIn.ActualWidth, (int)imageIn.ActualHeight)));
+
+            rtBmp.Render(imageIn);
+
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            MemoryStream stream = new MemoryStream();
+            encoder.Frames.Add(BitmapFrame.Create(rtBmp));
+            
+            // Save to memory stream and create Bitamp from stream
+            encoder.Save(stream);
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
+
+            // Demonstrate that we can do something with the Bitmap
+            bitmap.Save(GetSaveToFilePath(filePath), ImageFormat.Png);
+            
+
+
+            // Optionally, if we didn't need Bitmap object, but
+            // just wanted to render to file, we could:
+            //encoder.Save(new FileStream(GetSaveToFilePath(filePath), FileMode.Create));
+            
+        }
+
+        private static string GetSaveToFilePath(string imgFilePath)
+        {
+            string directory = System.IO.Path.GetDirectoryName(imgFilePath);
+            string[] labelsDir = Directory.GetDirectories(directory, "Labelled Images", SearchOption.TopDirectoryOnly);
+            string newDir = System.IO.Path.Combine(directory, "Labelled Images");
+            if(labelsDir.Length==0)
+            {
+                //create a new folder
+                Directory.CreateDirectory(newDir);
+            }
+            return System.IO.Path.Combine(newDir, System.IO.Path.GetFileName(imgFilePath));
+            //save to filpath
+            //check for existing subfolder
+            //check for existing image
+
+
+        }
+
+        private void Image_Drop(object sender, DragEventArgs e)
+        {
+            string[] droppedFiles = null;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+            }
+
+            if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
+
+            //listFiles.Items.Clear();
+
+            foreach (string s in droppedFiles)
+            {
+                filesList.Add(s);
+            }
+            setNextImage();
+
+        }
+
+        public void setNextImage()
+        {
+            //if there no next image empty
+            if (!filesList.Any())
+            {
+                //make the image empty
+                imgPhoto.Source = null;
+            }
+            else
+            {
+                imgPhoto.Source = new BitmapImage(new Uri(filesList[0]));
+                uneditedImg.Source = new BitmapImage(new Uri(filesList[0]));
+            }
+        }
 
     }
 }
