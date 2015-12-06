@@ -25,77 +25,135 @@ namespace SydneyOverlay
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Variables
         //uneditedImg is a holder for the incoming image
         public System.Windows.Controls.Image uneditedImg;
         public List<string> filesList;
+        public AreasAndConditions AandC;
+        //public SpeechSifter SpeechS;
+        #endregion
+
+
         public MainWindow()
         {
             uneditedImg = new System.Windows.Controls.Image();  
             filesList = new List<string>();
+            AandC = new AreasAndConditions();
+            //SpeechS = new SpeechSifter();
             InitializeComponent();
         }
 
+
+        #region Initializers
         private void ComboBox_Areas_Loaded(object sender, RoutedEventArgs e)
         {
-            string[] areas = { "Walls Internal",
-                                 "Walls External",
-                                 "Entry Hatch",
-                                 "Roof Platform",
-                                 "Walkways",
-                                 "Roof External",
-                                 "Roof Internal",
-                                 "Handrails",
-                                 "Columns",
-                                 "Roof Spider",
-                                 "Roof Framing",
-                                 "Floor"
-                             };
-
-            List<string> Areas = new List<string>(areas);
-
             var comboBox = sender as ComboBox;
-            comboBox.ItemsSource = Areas;
+            comboBox.ItemsSource = AandC.getAreas();
             comboBox.SelectedIndex = 0;
-        }
-
-        private void ComboBox_Areas_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var comboBox = sender as ComboBox;
-
-            //do something with 
-            //string value = comboBox.SelectedItem as string
+            CriteriasComboBox.IsDropDownOpen = false;
         }
         private void ComboBox_Criterias_Loaded(object sender, RoutedEventArgs e)
         {
-            string[] areas = { "Walls Internal",
-                                 "Walls External",
-                                 "Entry Hatch",
-                                 "Roof Platform",
-                                 "Walkways",
-                                 "Roof External",
-                                 "Roof Internal",
-                                 "Handrails",
-                                 "Columns",
-                                 "Roof Spider",
-                                 "Roof Framing",
-                                 "Floor"
+            string[] areas = { "Select an Area"
                              };
 
             List<string> Areas = new List<string>(areas);
-
             var comboBox = sender as ComboBox;
             comboBox.ItemsSource = Areas;
             comboBox.SelectedIndex = 0;
+            CriteriasComboBox.IsDropDownOpen = false;
+        }
+        private void DateText_Loaded(object sender, RoutedEventArgs e)
+        {
+            DateText.Text = string.Format(DateTime.Today.ToString("dd/MM/yyyy"));
         }
 
+        private void RatingComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            string[] areas = { "0",
+                                 "1",
+                                 "2",
+                                 "3",
+                                 "4"
+                             };
+
+            List<string> Areas = new List<string>(areas);
+            var comboBox = sender as ComboBox;
+            comboBox.ItemsSource = Areas;
+            comboBox.SelectedIndex = 0;
+            CriteriasComboBox.IsDropDownOpen = false;
+
+        }
+        private void LocationComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            string[] locations = {"1",
+                                 "2",
+                                 "3",
+                                 "4",
+                                 "5",
+                                 "6",
+                                 "7",
+                                 "8",
+                                 "9",
+                                 "10",
+                                 "11",
+                                 "12",
+                             };
+
+            List<string> Locations = new List<string>(locations);
+            var comboBox = sender as ComboBox;
+            comboBox.ItemsSource = Locations;
+            comboBox.SelectedIndex = 0;
+
+        }
+        #endregion
+
+
+        #region UserInput
+        private void ComboBox_Areas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            //get the selected item
+            string value = comboBox.SelectedItem as string;
+            //set the conditions to selecteditem
+            CriteriasComboBox.ItemsSource = AandC.getConditions(value);
+            CriteriasComboBox.SelectedIndex = 0;
+            CriteriasComboBox.IsDropDownOpen = true;
+        }
         private void ComboBox_Criterias_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var comboBox = sender as ComboBox;
-
+            RatingComboBox.IsDropDownOpen = true;
             //do something with 
             //string value = comboBox.SelectedItem as string
         }
+        private void RatingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            LocationComboBox.IsDropDownOpen = true;
+        }
+        private void LocationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+        }
+        private void Write_Button_Click(object sender, RoutedEventArgs e)
+        {
+            WriteComment(uneditedImg);
+        }
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            SaveImageToFile(imgPhoto, filesList[0]);
 
+            //Discard and set over the image
+            filesList.RemoveAt(0);
+            setNextImage();
+        }
+        private void Discard_Button_Click(object sender, RoutedEventArgs e)
+        {
+            //Skip over the image
+            filesList.RemoveAt(0);
+            setNextImage();
+        }
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog op = new OpenFileDialog();
@@ -111,10 +169,40 @@ namespace SydneyOverlay
                 setNextImage();
             }
         }
+        private void Image_Drop(object sender, DragEventArgs e)
+        {
+            string[] droppedFiles = null;
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as string[];
+            }
 
+            if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
+
+            //listFiles.Items.Clear();
+
+            foreach (string s in droppedFiles)
+            {
+                filesList.Add(s);
+            }
+            setNextImage();
+
+        }
+        #endregion
+
+
+        #region Funcitons
         private void WriteComment(System.Windows.Controls.Image image)
         {
-            TextContent.Text = CommentsBox.Text;
+            //TextContent is the text container with writing style for 
+            //the black with white outline
+            TextContent.Text = string.Format("ID: {0} ", IDText.Text);
+            TextContent.Text += string.Format("Date: {0}\n", DateText.Text);
+            TextContent.Text += string.Format("Area: {0}\n", AreasComboBox.SelectedItem as string);
+            TextContent.Text += string.Format("Issue: {0}\n", CriteriasComboBox.SelectedItem as string);
+            TextContent.Text += string.Format("Rating: {0}\n", RatingComboBox.Text);
+            TextContent.Text += string.Format("Location: {0}:00\n", LocationComboBox.SelectedItem as string);
+            TextContent.Text += string.Format("Comment/s:\n{0}\n", CommentsBox.Text);
             var visual = new DrawingVisual();
             System.Windows.Media.Pen pen = new System.Windows.Media.Pen(System.Windows.Media.Brushes.Black, 1);
             using(DrawingContext drawingContext = visual.RenderOpen())
@@ -133,28 +221,6 @@ namespace SydneyOverlay
             imgPhoto.Source = newImage;
             
         }
-
-        private void Write_Button_Click(object sender, RoutedEventArgs e)
-        {
-            WriteComment(uneditedImg);
-        }
-
-        private void Save_Button_Click(object sender, RoutedEventArgs e)
-        {
-            SaveImageToFile(imgPhoto, filesList[0]);
-
-            //Discard and set over the image
-            filesList.RemoveAt(0);
-            setNextImage();
-        }
-        private void Discard_Button_Click(object sender, RoutedEventArgs e)
-        {
-            //Skip over the image
-            filesList.RemoveAt(0);
-            setNextImage();
-        }
-
-
         private static void SaveImageToFile(System.Windows.Controls.Image imageIn, string filePath)
         {
             if (imageIn.Source == null) { return; }
@@ -185,7 +251,6 @@ namespace SydneyOverlay
             //encoder.Save(new FileStream(GetSaveToFilePath(filePath), FileMode.Create));
             
         }
-
         private static string GetSaveToFilePath(string imgFilePath)
         {
             string directory = System.IO.Path.GetDirectoryName(imgFilePath);
@@ -203,27 +268,6 @@ namespace SydneyOverlay
 
 
         }
-
-        private void Image_Drop(object sender, DragEventArgs e)
-        {
-            string[] droppedFiles = null;
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                droppedFiles = e.Data.GetData(DataFormats.FileDrop, true) as string[];
-            }
-
-            if ((null == droppedFiles) || (!droppedFiles.Any())) { return; }
-
-            //listFiles.Items.Clear();
-
-            foreach (string s in droppedFiles)
-            {
-                filesList.Add(s);
-            }
-            setNextImage();
-
-        }
-
         public void setNextImage()
         {
             //if there no next image empty
@@ -238,6 +282,13 @@ namespace SydneyOverlay
                 uneditedImg.Source = new BitmapImage(new Uri(filesList[0]));
             }
         }
+        #endregion
+
+
+
+
+
+
 
     }
 }
