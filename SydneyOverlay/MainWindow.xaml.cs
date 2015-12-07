@@ -17,6 +17,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Speech.Recognition;
 
 namespace SydneyOverlay
 {
@@ -30,7 +31,9 @@ namespace SydneyOverlay
         public System.Windows.Controls.Image uneditedImg;
         public List<string> filesList;
         public AreasAndConditions AandC;
-        //public SpeechSifter SpeechS;
+        public SpeechSifter SpeechS;
+        private ComboBox curComboBox;
+        private bool dontRunSelectionChanged = false;
         #endregion
 
 
@@ -39,8 +42,12 @@ namespace SydneyOverlay
             uneditedImg = new System.Windows.Controls.Image();  
             filesList = new List<string>();
             AandC = new AreasAndConditions();
-            //SpeechS = new SpeechSifter();
+            SpeechS = new SpeechSifter();
             InitializeComponent();
+            SpeechS.sre.SpeechRecognized +=
+                new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
+            SpeechS.controlWords = new string[] { "Write", "Save", "Discard" };
+
         }
 
 
@@ -49,7 +56,8 @@ namespace SydneyOverlay
         {
             var comboBox = sender as ComboBox;
             comboBox.ItemsSource = AandC.getAreas();
-            comboBox.SelectedIndex = 0;
+            
+            //comboBox.SelectedIndex = 0;
             CriteriasComboBox.IsDropDownOpen = false;
         }
         private void ComboBox_Criterias_Loaded(object sender, RoutedEventArgs e)
@@ -60,7 +68,7 @@ namespace SydneyOverlay
             List<string> Areas = new List<string>(areas);
             var comboBox = sender as ComboBox;
             comboBox.ItemsSource = Areas;
-            comboBox.SelectedIndex = 0;
+            //comboBox.SelectedIndex = 0;
             CriteriasComboBox.IsDropDownOpen = false;
         }
         private void DateText_Loaded(object sender, RoutedEventArgs e)
@@ -80,7 +88,7 @@ namespace SydneyOverlay
             List<string> Areas = new List<string>(areas);
             var comboBox = sender as ComboBox;
             comboBox.ItemsSource = Areas;
-            comboBox.SelectedIndex = 0;
+            //comboBox.SelectedIndex = 0;
             CriteriasComboBox.IsDropDownOpen = false;
 
         }
@@ -103,7 +111,7 @@ namespace SydneyOverlay
             List<string> Locations = new List<string>(locations);
             var comboBox = sender as ComboBox;
             comboBox.ItemsSource = Locations;
-            comboBox.SelectedIndex = 0;
+            //comboBox.SelectedIndex = 0;
 
         }
         #endregion
@@ -112,29 +120,38 @@ namespace SydneyOverlay
         #region UserInput
         private void ComboBox_Areas_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
             //get the selected item
             string value = comboBox.SelectedItem as string;
             //set the conditions to selecteditem
             CriteriasComboBox.ItemsSource = AandC.getConditions(value);
-            CriteriasComboBox.SelectedIndex = 0;
-            CriteriasComboBox.IsDropDownOpen = true;
+            
+            //Necessary for freindly UI on startup
+            //  SelectionChanged triggers ComboCox_Criterias.SelectionChanged
+            //CriteriasComboBox.SelectedIndex = 0;
+            setCurComboBox(CriteriasComboBox);
         }
         private void ComboBox_Criterias_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
-            RatingComboBox.IsDropDownOpen = true;
+            setCurComboBox(RatingComboBox);
             //do something with 
             //string value = comboBox.SelectedItem as string
         }
         private void RatingComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
-            LocationComboBox.IsDropDownOpen = true;
+            setCurComboBox(LocationComboBox);
         }
         private void LocationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
+            setCurComboBox(null);
+            comboBox.IsDropDownOpen = false;
         }
         private void Write_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -281,14 +298,77 @@ namespace SydneyOverlay
                 imgPhoto.Source = new BitmapImage(new Uri(filesList[0]));
                 uneditedImg.Source = new BitmapImage(new Uri(filesList[0]));
             }
+
+            setCurComboBox(AreasComboBox);
         }
+        public void setCurComboBox(ComboBox nextBox)
+        {
+            if (nextBox == null)
+            {
+                curComboBox = new ComboBox();
+                SpeechS.updateChoices(new string[] { });
+            }
+            else
+            {
+                //update curComboBox
+                curComboBox = nextBox;
+
+                //update speech choices
+                List<string> nextBoxItems = new List<string>();
+                foreach (string s in nextBox.Items)
+                {
+                    nextBoxItems.Add(s);
+                }
+                SpeechS.updateChoices(nextBoxItems.ToArray());
+
+                //dropdown menu = true
+                nextBox.IsDropDownOpen = true;
+            }
+        }
+        private void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
+        {
+
+            //match for comboBox
+            if (curComboBox.Items.Contains(e.Result.Text))
+            {
+                //if they don't match then selectedItemChange is triggered
+                if (curComboBox.SelectedItem as string != e.Result.Text)
+                {
+                    curComboBox.SelectedItem = e.Result.Text;
+                }
+                else
+                {
+
+                    dontRunSelectionChanged = true;
+                    curComboBox.SelectedItem = null;
+                    dontRunSelectionChanged = false;
+                    curComboBox.SelectedItem = e.Result.Text;
+                }
+            }
+            else
+            {
+                switch (e.Result.Text)
+                {
+                        //update with SpeechSifter.ControlWords
+                    case "Write":
+                        WriteComment(uneditedImg);
+                        break;
+                    case "Save":
+                        SaveImageToFile(imgPhoto, filesList[0]);
+                        filesList.RemoveAt(0);
+                        setNextImage();
+                        break;
+                    case "Discard":
+                        filesList.RemoveAt(0);
+                        setNextImage();
+                        break;
+                    default:
+                        //do nothing
+                        break;
+                }
+            }
         #endregion
 
-
-
-
-
-
-
+        }
     }
 }
