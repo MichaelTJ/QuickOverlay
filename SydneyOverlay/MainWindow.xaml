@@ -12,6 +12,8 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Name="btnOpen"
                           Click="btnOpen_Click"/>
+                <MenuItem Header="_Edit" Name="btnEdit"
+                          Click="btnEdit_Click"/>
                 <MenuItem Header="_Save"/>
                 <MenuItem Header="_Close"/>
             </MenuItem>

@@ -370,5 +370,11 @@ namespace SydneyOverlay
         #endregion
 
         }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            EditAsAndCs eaas = new EditAsAndCs(AandC);
+            eaas.Show();
+        }
     }
 }

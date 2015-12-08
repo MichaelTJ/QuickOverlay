@@ -56,15 +56,59 @@ namespace SydneyOverlay
             return AsAndCs[area];
         }
 
+        public void addArea(string Area)
+        {
+            AsAndCs.Add(Area, new List<string>());
+        }
+        public void addCondition(string Area, string Condition)
+        {
+            if (AsAndCs.ContainsKey(Area))
+            {
+                AsAndCs[Area].Add(Condition);
+            }
+        }
+        public void removeArea(string Area)
+        {
+            if (AsAndCs.ContainsKey(Area))
+            {
+                AsAndCs.Remove(Area);
+            }
+        }
+        public void removeCondition(string Area, string Condition)
+        {
+            if (AsAndCs.ContainsKey(Area))
+            {
+                if (AsAndCs[Area].Contains(Condition))
+                {
+                    AsAndCs[Area].Remove(Condition);
+                }
+            }
+        }
 
-        //Add new Area
-        //Add new Condition
-        //Table text
+        public void updateArea(string oldArea, string newArea)
+        {
+            if (AsAndCs.ContainsKey(oldArea))
+            {
+                List<string> oldList = AsAndCs[oldArea];
+                AsAndCs.Remove(oldArea);
+                AsAndCs.Add(newArea, oldList);
+            }
+        }
+
+        public void updateCondition(string Area, string oldCondition, string newCondition)
+        {
+            if (AsAndCs.ContainsKey(Area))
+            {
+                if (AsAndCs[Area].Contains(oldCondition))
+                {
+                    AsAndCs[Area].Remove(oldCondition);
+                    AsAndCs[Area].Add(newCondition);
+                }
+            }
+        }
         //Save
         //Open
         //Choose which template
-
-        //Get areas
 
     }
     

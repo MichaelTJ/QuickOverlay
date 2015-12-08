@@ -1,0 +1,42 @@
+﻿<Window x:Class="SydneyOverlay.EditText"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EditText" Height="130" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"
+                />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="1"
+            Name="txtBlockOld"
+            Margin="10,10,0,0"
+            />
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Name="txtBoxNew"
+            Margin="10,10,0,0"
+            />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="10,10,0,0"
+            Text="Old name: "
+            />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="10,10,0,0"
+            Text="New name: "/>
+        
+    </Grid>
+</Window>

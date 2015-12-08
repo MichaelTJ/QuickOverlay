@@ -66,7 +66,21 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AreasAndConditions.cs" />
+    <Compile Include="EditAsAndCs.xaml.cs">
+      <DependentUpon>EditAsAndCs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditText.xaml.cs">
+      <DependentUpon>EditText.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SpeechSifter.cs" />
+    <Page Include="EditAsAndCs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditText.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
