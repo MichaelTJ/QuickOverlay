@@ -71,3 +71,10 @@ C:\Users\Sandy\Desktop\QuickOverlay\SydneyOverlay\obj\Debug\Themes\Generic.baml
 C:\Users\Sandy\Desktop\QuickOverlay\SydneyOverlay\obj\Debug\SydneyOverlay.g.resources
 C:\Users\Sandy\Desktop\QuickOverlay\SydneyOverlay\obj\Debug\SydneyOverlay.Properties.Resources.resources
 C:\Users\Sandy\Desktop\QuickOverlay\SydneyOverlay\obj\Debug\AUSROVOverlay.csproj.GenerateResource.Cache
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\EditAsAndCs.baml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\EditAsAndCs.g.cs
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\SydneyOverlay_MarkupCompile.lref
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\Themes\Generic.baml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\EditText.baml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\SydneyOverlay\SydneyOverlay\obj\Debug\EditText.g.cs
