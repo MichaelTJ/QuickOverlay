@@ -4,8 +4,7 @@
         Title="EditText" Height="130" Width="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"
-                />
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -18,13 +17,13 @@
             Grid.Row="0"
             Grid.Column="1"
             Name="txtBlockOld"
-            Margin="10,10,0,0"
+            Margin="10,10,10,0"
             />
         <TextBox
             Grid.Row="1"
             Grid.Column="1"
             Name="txtBoxNew"
-            Margin="10,10,0,0"
+            Margin="10,10,10,0"
             />
         <TextBlock
             Grid.Row="0"
@@ -37,6 +36,20 @@
             Grid.Column="0"
             Margin="10,10,0,0"
             Text="New name: "/>
+        <Button
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="10,10,0,0"
+            Content="Cancel"
+            Name="btnCancel"
+            Click="btnCancel_Click"/>
+        <Button
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="10,10,10,0"
+            Content="Save"
+            Name="btnSave"
+            Click="btnSave_Click"/>
         
     </Grid>
 </Window>

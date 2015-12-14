@@ -12,10 +12,16 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Open" Name="btnOpen"
                           Click="btnOpen_Click"/>
-                <MenuItem Header="_Edit" Name="btnEdit"
-                          Click="btnEdit_Click"/>
                 <MenuItem Header="_Save"/>
                 <MenuItem Header="_Close"/>
+            </MenuItem>
+            <MenuItem Header="_Overlays">
+                <MenuItem Header="_New" Name="btnOverNew"
+                          Click="btnOverNew_Click"/>
+                <MenuItem Header="_Load" Name="btnOverLoad"
+                          Click="btnOverLoad_Click"/>
+                <MenuItem Header="_Edit" Name="btnOverEdit"
+                          Click="btnOverEdit_Click"/>
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">

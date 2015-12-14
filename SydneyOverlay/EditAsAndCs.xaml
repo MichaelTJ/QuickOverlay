@@ -20,7 +20,8 @@
                     />
             <Button Grid.Column="1"
                     Name="btnSave"
-                    Content="Save"/>
+                    Content="Save"
+                    Click="btnSave_Click"/>
         </Grid>
         <DockPanel DockPanel.Dock="Left"
                    Margin="10,10,0,0">

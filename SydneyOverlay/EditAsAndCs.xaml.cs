@@ -18,10 +18,11 @@ namespace SydneyOverlay
     /// </summary>
     public partial class EditAsAndCs : Window
     {
-        AreasAndConditions AsAndCs = new AreasAndConditions();
+        AreasAndConditions AsAndCs;
         private bool tempDisabled;
         public EditAsAndCs()
         {
+            AsAndCs = new AreasAndConditions();
             InitializeComponent();
 
         }
@@ -94,10 +95,6 @@ namespace SydneyOverlay
             updateConditions();
         }
 
-        private void btnEditArea_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void btnDeleteArea_Click(object sender, RoutedEventArgs e)
         {
@@ -123,7 +120,33 @@ namespace SydneyOverlay
 
         private void btnEditCondition_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (ConditionsListBox.SelectedItem != null)
+            {
+                if (AreasListBox.SelectedItem != null)
+                {
+                    EditText ET = new EditText(AsAndCs,
+                        AreasListBox.SelectedItem as string,
+                        ConditionsListBox.SelectedItem as string);
+                    ET.Show();
+                    updateConditions();
+                }
+            }
+        }
+
+        private void btnEditArea_Click(object sender, RoutedEventArgs e)
+        {
+            if (AreasListBox.SelectedItem != null)
+            {
+                EditText ET = new EditText(AsAndCs,
+                    AreasListBox.SelectedItem as string);
+                updateAreas();
+            }
+
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
 

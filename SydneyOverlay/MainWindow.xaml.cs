@@ -18,6 +18,15 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Speech.Recognition;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
+using System.ServiceModel.Web;
+using System.ServiceModel;
+using System.Runtime.Serialization;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+
 
 namespace SydneyOverlay
 {
@@ -30,6 +39,7 @@ namespace SydneyOverlay
         //uneditedImg is a holder for the incoming image
         public System.Windows.Controls.Image uneditedImg;
         public List<string> filesList;
+        private List<AreasAndConditions> AandCList;
         public AreasAndConditions AandC;
         public SpeechSifter SpeechS;
         private ComboBox curComboBox;
@@ -39,14 +49,20 @@ namespace SydneyOverlay
 
         public MainWindow()
         {
-            uneditedImg = new System.Windows.Controls.Image();  
+            uneditedImg = new System.Windows.Controls.Image();
             filesList = new List<string>();
-            AandC = new AreasAndConditions();
+
+            //AandC = new AreasAndConditions();
             SpeechS = new SpeechSifter();
             InitializeComponent();
             SpeechS.sre.SpeechRecognized +=
                 new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
             SpeechS.controlWords = new string[] { "Write", "Save", "Discard" };
+            //AandCList = new List<AreasAndConditions>();
+            //AandCList.Add(AandC);
+            //saveLocalJSON();
+            //saveLocal();
+            LoadLocalJSON();
 
         }
 
@@ -56,7 +72,7 @@ namespace SydneyOverlay
         {
             var comboBox = sender as ComboBox;
             comboBox.ItemsSource = AandC.getAreas();
-            
+
             //comboBox.SelectedIndex = 0;
             CriteriasComboBox.IsDropDownOpen = false;
         }
@@ -126,7 +142,7 @@ namespace SydneyOverlay
             string value = comboBox.SelectedItem as string;
             //set the conditions to selecteditem
             CriteriasComboBox.ItemsSource = AandC.getConditions(value);
-            
+
             //Necessary for freindly UI on startup
             //  SelectionChanged triggers ComboCox_Criterias.SelectionChanged
             //CriteriasComboBox.SelectedIndex = 0;
@@ -179,7 +195,7 @@ namespace SydneyOverlay
                 "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
                 "Portable Network Graphic (*.png)|*.png";
 
-            if(op.ShowDialog()==true)
+            if (op.ShowDialog() == true)
             {
                 //add it to files list
                 filesList.Add(op.FileName);
@@ -222,10 +238,10 @@ namespace SydneyOverlay
             TextContent.Text += string.Format("Comment/s:\n{0}\n", CommentsBox.Text);
             var visual = new DrawingVisual();
             System.Windows.Media.Pen pen = new System.Windows.Media.Pen(System.Windows.Media.Brushes.Black, 1);
-            using(DrawingContext drawingContext = visual.RenderOpen())
+            using (DrawingContext drawingContext = visual.RenderOpen())
             {
-                drawingContext.DrawImage(image.Source, 
-                    new Rect(0,0,image.Source.Width,image.Source.Height));
+                drawingContext.DrawImage(image.Source,
+                    new Rect(0, 0, image.Source.Width, image.Source.Height));
                 drawingContext.DrawGeometry(System.Windows.Media.Brushes.White, pen, TextContent._textGeometry);
                 /*
                 drawingContext.DrawText(
@@ -236,12 +252,12 @@ namespace SydneyOverlay
             }
             var newImage = new DrawingImage(visual.Drawing);
             imgPhoto.Source = newImage;
-            
+
         }
         private static void SaveImageToFile(System.Windows.Controls.Image imageIn, string filePath)
         {
             if (imageIn.Source == null) { return; }
-            
+
             RenderTargetBitmap rtBmp = new RenderTargetBitmap((int)imageIn.ActualWidth, (int)imageIn.ActualHeight,
                 96.0, 96.0, PixelFormats.Pbgra32);
 
@@ -253,27 +269,27 @@ namespace SydneyOverlay
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             MemoryStream stream = new MemoryStream();
             encoder.Frames.Add(BitmapFrame.Create(rtBmp));
-            
+
             // Save to memory stream and create Bitamp from stream
             encoder.Save(stream);
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
 
             // Demonstrate that we can do something with the Bitmap
             bitmap.Save(GetSaveToFilePath(filePath), ImageFormat.Png);
-            
+
 
 
             // Optionally, if we didn't need Bitmap object, but
             // just wanted to render to file, we could:
             //encoder.Save(new FileStream(GetSaveToFilePath(filePath), FileMode.Create));
-            
+
         }
         private static string GetSaveToFilePath(string imgFilePath)
         {
             string directory = System.IO.Path.GetDirectoryName(imgFilePath);
             string[] labelsDir = Directory.GetDirectories(directory, "Labelled Images", SearchOption.TopDirectoryOnly);
             string newDir = System.IO.Path.Combine(directory, "Labelled Images");
-            if(labelsDir.Length==0)
+            if (labelsDir.Length == 0)
             {
                 //create a new folder
                 Directory.CreateDirectory(newDir);
@@ -349,7 +365,7 @@ namespace SydneyOverlay
             {
                 switch (e.Result.Text)
                 {
-                        //update with SpeechSifter.ControlWords
+                    //update with SpeechSifter.ControlWords
                     case "Write":
                         WriteComment(uneditedImg);
                         break;
@@ -371,10 +387,52 @@ namespace SydneyOverlay
 
         }
 
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        private void btnOverEdit_Click(object sender, RoutedEventArgs e)
         {
             EditAsAndCs eaas = new EditAsAndCs(AandC);
             eaas.Show();
+        }
+
+        private void btnOverNew_Click(object sender, RoutedEventArgs e)
+        {
+            NewAAC newWindow = new NewAAC(AandCList);
+            newWindow.Show();
+        }
+
+        private void btnOverLoad_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+        private void saveLocalJSON()
+        {
+
+            MemoryStream ms = new System.IO.MemoryStream();
+            JsonSerializer ser = new JsonSerializer();
+            using (StreamWriter sw = new System.IO.StreamWriter("A2.txt"))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                ser.Serialize(writer, AandCList);
+            }
+
+        }
+        private void LoadLocalJSON()
+        {
+            //Deserializes the local list of Areas and Conditions
+            JsonSerializer ser = new JsonSerializer();
+            using (StreamReader sr = new System.IO.StreamReader("A2.txt"))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                JArray a = (JArray)ser.Deserialize(reader);
+                AandCList = new List<AreasAndConditions>();
+                foreach (var aac in a)
+                {
+                    AandCList.Add(JsonConvert.DeserializeObject<AreasAndConditions>(aac.ToString()));
+                }
+            }
+            //Sets the first one in the list to the current one
+            AandC = AandCList[0];
         }
     }
 }

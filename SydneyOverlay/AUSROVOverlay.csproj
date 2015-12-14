@@ -35,9 +35,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Controls.Input.Toolkit">
       <HintPath>..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Input.Toolkit.dll</HintPath>
@@ -72,6 +77,9 @@
     <Compile Include="EditText.xaml.cs">
       <DependentUpon>EditText.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NewAAC.xaml.cs">
+      <DependentUpon>NewAAC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SpeechSifter.cs" />
     <Page Include="EditAsAndCs.xaml">
       <SubType>Designer</SubType>
@@ -93,6 +101,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NewAAC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

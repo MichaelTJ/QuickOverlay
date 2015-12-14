@@ -5,13 +5,20 @@ using System.Text;
 
 namespace SydneyOverlay
 {
+    public class AreasAndConditionsWrapper
+    {
+        public Dictionary<string, List<string>> AsAndCs;
+        public string Title;
+    }
     public class AreasAndConditions
     {
-        Dictionary<string, List<string>> AsAndCs;
+        public Dictionary<string, List<string>> AsAndCs;
+        public string Title;
 
         public AreasAndConditions()
         {
             AsAndCs = new Dictionary<string, List<string>>();
+            Title = "Standard Tank Inspection";
 
             string[] areas = { "Walls Internal",
                                  "Walls External",
@@ -45,11 +52,16 @@ namespace SydneyOverlay
                 AsAndCs[s].Add(conditions[RandString.Next(0, conditions.Length)]);
             }
         }
+
+        public AreasAndConditions(string name)
+        {
+            AsAndCs = new Dictionary<string, List<string>>();
+            Title = name;
+        }
         public List<string> getAreas()
         {
             return AsAndCs.Keys.ToList();
         }
-
 
         public List<string> getConditions(string area)
         {
@@ -58,6 +70,12 @@ namespace SydneyOverlay
 
         public void addArea(string Area)
         {
+            if (AsAndCs.ContainsKey(Area))
+            {
+                System.Windows.MessageBox.Show(String.Format("That area {0} already exists.", Area));
+                return;
+            }
+
             AsAndCs.Add(Area, new List<string>());
         }
         public void addCondition(string Area, string Condition)
@@ -106,6 +124,7 @@ namespace SydneyOverlay
                 }
             }
         }
+
         //Save
         //Open
         //Choose which template
