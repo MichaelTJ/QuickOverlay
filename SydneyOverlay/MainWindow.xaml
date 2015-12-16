@@ -19,10 +19,10 @@
             <MenuItem Header="_Overlays">
                 <MenuItem Header="_New" Name="btnOverNew"
                           Click="btnOverNew_Click"/>
-                <MenuItem Header="_Load" Name="btnOverLoad"
-                          Click="btnOverLoad_Click"/>
-                <MenuItem Header="_Edit" Name="btnOverEdit"
+                <MenuItem Header="_Edit Current" Name="btnOverEdit"
                           Click="btnOverEdit_Click"/>
+                <MenuItem Header="_Delete Current" Name="btnOverDeleteCurrent"
+                          Click="btnOverDeleteCurrent_Click"/>
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">

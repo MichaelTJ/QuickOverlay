@@ -62,19 +62,13 @@ namespace SydneyOverlay
             
             //LoadLocalJSON creates now AandCList if there's none
             LoadLocalJSON();
-            List<string> overlayTitles = new List<string>();
-            foreach (var overlay in AandCList)
-            {
-                overlayTitles.Add(overlay.Title);
-            }
-            OverlayComboBox.ItemsSource = overlayTitles;
+            UpdateOverlayCombobox();
             AandCList.CollectionChanged += AandCList_CollectionChanged;
 
             //Triggeres OverlayComboBOx_CHanged and sets the res of the boxes
             //Sets up the rest of the ComboCoxes
             OverlayComboBox.SelectedIndex = 0;
         }
-
         private void AandCList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //here to update the current A&C options
@@ -190,7 +184,9 @@ namespace SydneyOverlay
         }
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (filesList.Count == 0) { return; }
             SaveImageToFile(imgPhoto, filesList[0]);
+            SaveLabelsToText(filesList[0]);
 
             //Discard and set over the image
             filesList.RemoveAt(0);
@@ -198,6 +194,7 @@ namespace SydneyOverlay
         }
         private void Discard_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (filesList.Count == 0) { return; }
             //Skip over the image
             filesList.RemoveAt(0);
             setNextImage();
@@ -242,6 +239,8 @@ namespace SydneyOverlay
         #region Funcitons
         private void WriteComment(System.Windows.Controls.Image image)
         {
+
+            if (image.Source == null) { return; }
             //TextContent is the text container with writing style for 
             //the black with white outline
             TextContent.Text = string.Format("ID: {0} ", IDText.Text);
@@ -299,6 +298,23 @@ namespace SydneyOverlay
             //encoder.Save(new FileStream(GetSaveToFilePath(filePath), FileMode.Create));
 
         }
+        private void SaveLabelsToText(string filePath)
+        {
+            string[] combinedText = new string[7];
+            combinedText[0] = string.Format("ID: {0} ", IDText.Text);
+            combinedText[1] = string.Format("Date: {0}\n", DateText.Text);
+            combinedText[2] = string.Format("Area: {0}\n", AreasComboBox.SelectedItem as string);
+            combinedText[3] = string.Format("Issue: {0}\n", CriteriasComboBox.SelectedItem as string);
+            combinedText[4] = string.Format("Rating: {0}\n", RatingComboBox.Text);
+            combinedText[5] = string.Format("Location: {0}:00\n", LocationComboBox.SelectedItem as string);
+            combinedText[6] = string.Format("Comment/s:\n{0}\n", CommentsBox.Text);
+
+            string newPath = GetSaveToFilePath(filePath);
+            string newPathGoodExtension = System.IO.Path.ChangeExtension(newPath,".txt");
+
+            File.WriteAllLines(newPathGoodExtension, combinedText);
+
+        }
         private static string GetSaveToFilePath(string imgFilePath)
         {
             string directory = System.IO.Path.GetDirectoryName(imgFilePath);
@@ -313,8 +329,6 @@ namespace SydneyOverlay
             //save to filpath
             //check for existing subfolder
             //check for existing image
-
-
         }
         public void setNextImage()
         {
@@ -389,6 +403,7 @@ namespace SydneyOverlay
                         break;
                     case "Save":
                         SaveImageToFile(imgPhoto, filesList[0]);
+                        SaveLabelsToText(filesList[0]);
                         filesList.RemoveAt(0);
                         setNextImage();
                         break;
@@ -401,9 +416,23 @@ namespace SydneyOverlay
                         break;
                 }
             }
-        #endregion
+
 
         }
+
+        private void UpdateOverlayCombobox()
+        {
+            List<string> overlayTitles = new List<string>();
+            foreach (var overlay in AandCList)
+            {
+                overlayTitles.Add(overlay.Title);
+            }
+            OverlayComboBox.ItemsSource = overlayTitles;
+
+        }
+
+        #endregion
+
 
         private void btnOverEdit_Click(object sender, RoutedEventArgs e)
         {
@@ -414,8 +443,17 @@ namespace SydneyOverlay
 
         private void btnOverNew_Click(object sender, RoutedEventArgs e)
         {
+            int preNewCount = AandCList.Count;
             NewAAC newWindow = new NewAAC(AandCList);
             newWindow.ShowDialog();
+            int postNewCount = AandCList.Count;
+            //If a new overlay type was added then make it the selected one
+            if (preNewCount != postNewCount)
+            {
+                UpdateOverlayCombobox();
+                OverlayComboBox.SelectedIndex = AandCList.Count - 1;
+            }
+            //Else dont do anything
             ResetComboBoxes();
         }
 
@@ -500,6 +538,17 @@ namespace SydneyOverlay
             setCurComboBox(AreasComboBox);
         }
 
-
+        private void btnOverDeleteCurrent_Click(object sender, RoutedEventArgs e)
+        {
+            if(MessageBox.Show("Do you want to delete the current overlay set?",
+                "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                //TODO: Deal with removing the last element in the AandCList
+                AandCList.Remove(AandC);
+                OverlayComboBox.SelectedIndex = 0;
+                UpdateOverlayCombobox();
+            }
+        }
+        
     }
 }
