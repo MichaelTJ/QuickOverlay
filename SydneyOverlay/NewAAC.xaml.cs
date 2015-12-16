@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 
 namespace SydneyOverlay
 {
@@ -18,14 +19,14 @@ namespace SydneyOverlay
     /// </summary>
     public partial class NewAAC : Window
     {
-        List<AreasAndConditions> AACList;
+        ObservableCollection<AreasAndConditions> AACList;
         public NewAAC()
         {
-            AACList = new List<AreasAndConditions>();
+            AACList = new ObservableCollection<AreasAndConditions>();
             InitializeComponent();
         }
 
-        public NewAAC(List<AreasAndConditions> AACListIn)
+        public NewAAC(ObservableCollection<AreasAndConditions> AACListIn)
         {
             AACList = AACListIn;
             InitializeComponent();
@@ -40,7 +41,7 @@ namespace SydneyOverlay
             AreasAndConditions newAAC = new AreasAndConditions(txtBoxName.Text);
             AACList.Add(newAAC);
             EditAsAndCs EAAC = new EditAsAndCs(newAAC);
-            EAAC.Show();
+            EAAC.ShowDialog();
             Close();
         }
     }

@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.ComponentModel;
 namespace SydneyOverlay
 {
-    public class AreasAndConditionsWrapper
-    {
-        public Dictionary<string, List<string>> AsAndCs;
-        public string Title;
-    }
     public class AreasAndConditions
     {
         public Dictionary<string, List<string>> AsAndCs;
@@ -80,6 +75,7 @@ namespace SydneyOverlay
         }
         public void addCondition(string Area, string Condition)
         {
+            //TODO: Add exceptionhandler if there's no selected key in areas
             if (AsAndCs.ContainsKey(Area))
             {
                 AsAndCs[Area].Add(Condition);
@@ -124,7 +120,6 @@ namespace SydneyOverlay
                 }
             }
         }
-
         //Save
         //Open
         //Choose which template

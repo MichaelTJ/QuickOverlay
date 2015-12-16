@@ -67,6 +67,7 @@ namespace SydneyOverlay
             {
                 AsAndCs.updateCondition(areaIn,conditionIn, txtBoxNew.Text);
             }
+
             Close();
         }
     }

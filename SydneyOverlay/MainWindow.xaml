@@ -6,7 +6,8 @@
         Title="MainWindow" Height="960" Width="525"
         WindowState="Maximized"
         AllowDrop="True"
-        Drop="Image_Drop" >
+        Drop="Image_Drop"
+        Closed="Window_Closed">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -25,6 +26,16 @@
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">
+            <TextBlock DockPanel.Dock="Top" Text="Overlay Type:" 
+                Margin="10,10,0,0"/>
+            <ComboBox
+                DockPanel.Dock="Top"
+                Name="OverlayComboBox"
+                HorizontalAlignment="Left"
+                Margin="10,10,0,0"
+                VerticalAlignment="Top"
+                Width="200"
+                SelectionChanged="OverlayComboBox_SelectionChanged"/>
             <TextBlock DockPanel.Dock="Top" Text="ID:"
                        Margin="10,10,0,0"/>
             <TextBox DockPanel.Dock="Top"

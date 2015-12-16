@@ -19,17 +19,23 @@ namespace SydneyOverlay
     public partial class EditAsAndCs : Window
     {
         AreasAndConditions AsAndCs;
+        AreasAndConditions oldAsAndCs;
         private bool tempDisabled;
         public EditAsAndCs()
         {
             AsAndCs = new AreasAndConditions();
+            oldAsAndCs = new AreasAndConditions();
             InitializeComponent();
+            Title = "Unknown";
 
         }
         public EditAsAndCs(AreasAndConditions AAC)
         {
             AsAndCs = AAC;
+            oldAsAndCs = AAC;
             InitializeComponent();
+            Title = AAC.Title;
+
         }
 
         private void AreasListBox_Loaded(object sender, RoutedEventArgs e)
@@ -146,7 +152,13 @@ namespace SydneyOverlay
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            Close();
+        }
 
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            AsAndCs = oldAsAndCs;
+            Close();
         }
 
 

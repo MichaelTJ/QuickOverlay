@@ -20,12 +20,13 @@ using System.IO;
 using System.Speech.Recognition;
 using System.Xml;
 using System.Xml.Serialization;
-using System.IO;
 using System.ServiceModel.Web;
 using System.ServiceModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 
 namespace SydneyOverlay
@@ -39,7 +40,7 @@ namespace SydneyOverlay
         //uneditedImg is a holder for the incoming image
         public System.Windows.Controls.Image uneditedImg;
         public List<string> filesList;
-        private List<AreasAndConditions> AandCList;
+        private ObservableCollection<AreasAndConditions> AandCList;
         public AreasAndConditions AandC;
         public SpeechSifter SpeechS;
         private ComboBox curComboBox;
@@ -63,7 +64,24 @@ namespace SydneyOverlay
             //saveLocalJSON();
             //saveLocal();
             LoadLocalJSON();
+            List<string> overlayTitles = new List<string>();
+            foreach (var overlay in AandCList)
+            {
+                overlayTitles.Add(overlay.Title);
+            }
+            OverlayComboBox.ItemsSource = overlayTitles;
+            AandCList.CollectionChanged += AandCList_CollectionChanged;
+            OverlayComboBox.SelectedIndex = 0;
+        }
 
+        private void AandCList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //here to update the current A&C options
+            //when a new one is added
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                AandC = AandCList[AandCList.Count-1];
+            }
         }
 
 
@@ -78,13 +96,9 @@ namespace SydneyOverlay
         }
         private void ComboBox_Criterias_Loaded(object sender, RoutedEventArgs e)
         {
-            string[] areas = { "Select an Area"
-                             };
-
-            List<string> Areas = new List<string>(areas);
             var comboBox = sender as ComboBox;
-            comboBox.ItemsSource = Areas;
-            //comboBox.SelectedIndex = 0;
+            comboBox.ItemsSource = new string[] { "Select an Area" };
+            //required for friendly UI on startup
             CriteriasComboBox.IsDropDownOpen = false;
         }
         private void DateText_Loaded(object sender, RoutedEventArgs e)
@@ -319,6 +333,9 @@ namespace SydneyOverlay
         }
         public void setCurComboBox(ComboBox nextBox)
         {
+            //CurComboBox is the identifyer for the currently selected Cbox
+            //It's items are passed to the grammar recognizer
+            //And its options are made visible through IsDropDown=true
             if (nextBox == null)
             {
                 curComboBox = new ComboBox();
@@ -390,13 +407,31 @@ namespace SydneyOverlay
         private void btnOverEdit_Click(object sender, RoutedEventArgs e)
         {
             EditAsAndCs eaas = new EditAsAndCs(AandC);
-            eaas.Show();
+            eaas.ShowDialog();
+            dontRunSelectionChanged = true;
+            //Activated after adding new AsAndCs and updating old ones
+
+            AreasComboBox.ItemsSource = AandC.getAreas();
+            CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
+            //comboBox.SelectedIndex = 0;
+            CriteriasComboBox.IsDropDownOpen = false;
+            dontRunSelectionChanged = false;
+            //AreasComboBox.SelectedIndex = 0;
         }
 
         private void btnOverNew_Click(object sender, RoutedEventArgs e)
         {
             NewAAC newWindow = new NewAAC(AandCList);
-            newWindow.Show();
+            newWindow.ShowDialog();
+            dontRunSelectionChanged = true;
+            //Activated after adding new AsAndCs and updating old ones
+
+            AreasComboBox.ItemsSource = AandC.getAreas();
+            CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
+            //comboBox.SelectedIndex = 0;
+            CriteriasComboBox.IsDropDownOpen = false;
+            dontRunSelectionChanged = false;
+            //AreasComboBox.SelectedIndex = 0;
         }
 
         private void btnOverLoad_Click(object sender, RoutedEventArgs e)
@@ -405,6 +440,7 @@ namespace SydneyOverlay
         }
 
 
+        #region SavingAndLoading
         private void saveLocalJSON()
         {
 
@@ -421,18 +457,53 @@ namespace SydneyOverlay
         {
             //Deserializes the local list of Areas and Conditions
             JsonSerializer ser = new JsonSerializer();
-            using (StreamReader sr = new System.IO.StreamReader("A2.txt"))
-            using (JsonReader reader = new JsonTextReader(sr))
+            try
             {
-                JArray a = (JArray)ser.Deserialize(reader);
-                AandCList = new List<AreasAndConditions>();
-                foreach (var aac in a)
+                using (StreamReader sr = new System.IO.StreamReader("A2.txt"))
+                using (JsonReader reader = new JsonTextReader(sr))
                 {
-                    AandCList.Add(JsonConvert.DeserializeObject<AreasAndConditions>(aac.ToString()));
+
+                    JArray a = (JArray)ser.Deserialize(reader);
+                    AandCList = new ObservableCollection<AreasAndConditions>();
+                    foreach (var aac in a)
+                    {
+                        AandCList.Add(JsonConvert.DeserializeObject<AreasAndConditions>(aac.ToString()));
+                    }
                 }
+            }
+            catch (FileNotFoundException e)
+            {
+                AandCList = new ObservableCollection<AreasAndConditions>();
+                AandCList.Add(new AreasAndConditions());
             }
             //Sets the first one in the list to the current one
             AandC = AandCList[0];
         }
+        #endregion
+
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            saveLocalJSON();
+        }
+
+        private void OverlayComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ResetComboBoxes();
+        }
+
+        private void ResetComboBoxes()
+        {
+            dontRunSelectionChanged = true;
+            AandC = AandCList[OverlayComboBox.SelectedIndex];
+            AreasComboBox.ItemsSource = AandC.getAreas();
+            CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
+            //comboBox.SelectedIndex = 0;
+            //AreasComboBox.SelectedItem = null;
+            dontRunSelectionChanged = false;
+            setCurComboBox(AreasComboBox);
+        }
+
+
     }
 }

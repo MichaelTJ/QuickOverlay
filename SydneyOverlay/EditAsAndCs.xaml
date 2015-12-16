@@ -16,7 +16,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                     Name="btnCancel"
-                    Content="Cancel"
+                    Content="Cancel" Click="btnCancel_Click"
                     />
             <Button Grid.Column="1"
                     Name="btnSave"
@@ -25,6 +25,8 @@
         </Grid>
         <DockPanel DockPanel.Dock="Left"
                    Margin="10,10,0,0">
+            <TextBox DockPanel.Dock="Top"
+                     Text="Areas:"/>
             <ListBox DockPanel.Dock="Top"
                  Name="AreasListBox"
                  Margin="0,0,0,0"
@@ -72,6 +74,8 @@
         </DockPanel>
         <DockPanel DockPanel.Dock="Right"
                    Margin="10,10,0,0">
+            <TextBox DockPanel.Dock="Top"
+                     Text="Conditions:"/>
             <ListBox DockPanel.Dock="Top"
                  Name="ConditionsListBox"
                  Margin="0,0,0,0"
