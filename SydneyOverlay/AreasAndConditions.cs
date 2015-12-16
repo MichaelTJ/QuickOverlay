@@ -48,6 +48,14 @@ namespace SydneyOverlay
             }
         }
 
+        public AreasAndConditions(string TitleIn, Dictionary<string, List<string>> AsAndCsIn)
+        {
+            Title = TitleIn;
+            AsAndCs = AsAndCsIn;
+        }
+
+        
+
         public AreasAndConditions(string name)
         {
             AsAndCs = new Dictionary<string, List<string>>();

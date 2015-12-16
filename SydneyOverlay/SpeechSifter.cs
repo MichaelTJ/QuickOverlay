@@ -46,11 +46,15 @@ namespace SydneyOverlay
         }
         private string[] addControls(string[] choices)
         {
+            //Bring in the new choices
+            //Convert to a list so that control words (Save, Discard...)
+            //Can be added
             List<string> newChoices = choices.ToList();
             foreach (string s in controlWords)
             {
                 newChoices.Add(s);
             }
+            //return old choices + control words
             return newChoices.ToArray();
 
         }

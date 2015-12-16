@@ -59,10 +59,8 @@ namespace SydneyOverlay
             SpeechS.sre.SpeechRecognized +=
                 new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
             SpeechS.controlWords = new string[] { "Write", "Save", "Discard" };
-            //AandCList = new List<AreasAndConditions>();
-            //AandCList.Add(AandC);
-            //saveLocalJSON();
-            //saveLocal();
+            
+            //LoadLocalJSON creates now AandCList if there's none
             LoadLocalJSON();
             List<string> overlayTitles = new List<string>();
             foreach (var overlay in AandCList)
@@ -71,6 +69,9 @@ namespace SydneyOverlay
             }
             OverlayComboBox.ItemsSource = overlayTitles;
             AandCList.CollectionChanged += AandCList_CollectionChanged;
+
+            //Triggeres OverlayComboBOx_CHanged and sets the res of the boxes
+            //Sets up the rest of the ComboCoxes
             OverlayComboBox.SelectedIndex = 0;
         }
 
@@ -408,30 +409,14 @@ namespace SydneyOverlay
         {
             EditAsAndCs eaas = new EditAsAndCs(AandC);
             eaas.ShowDialog();
-            dontRunSelectionChanged = true;
-            //Activated after adding new AsAndCs and updating old ones
-
-            AreasComboBox.ItemsSource = AandC.getAreas();
-            CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
-            //comboBox.SelectedIndex = 0;
-            CriteriasComboBox.IsDropDownOpen = false;
-            dontRunSelectionChanged = false;
-            //AreasComboBox.SelectedIndex = 0;
+            ResetComboBoxes();
         }
 
         private void btnOverNew_Click(object sender, RoutedEventArgs e)
         {
             NewAAC newWindow = new NewAAC(AandCList);
             newWindow.ShowDialog();
-            dontRunSelectionChanged = true;
-            //Activated after adding new AsAndCs and updating old ones
-
-            AreasComboBox.ItemsSource = AandC.getAreas();
-            CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
-            //comboBox.SelectedIndex = 0;
-            CriteriasComboBox.IsDropDownOpen = false;
-            dontRunSelectionChanged = false;
-            //AreasComboBox.SelectedIndex = 0;
+            ResetComboBoxes();
         }
 
         private void btnOverLoad_Click(object sender, RoutedEventArgs e)
@@ -446,7 +431,7 @@ namespace SydneyOverlay
 
             MemoryStream ms = new System.IO.MemoryStream();
             JsonSerializer ser = new JsonSerializer();
-            using (StreamWriter sw = new System.IO.StreamWriter("A2.txt"))
+            using (StreamWriter sw = new System.IO.StreamWriter("A3.txt"))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 ser.Serialize(writer, AandCList);
@@ -455,29 +440,40 @@ namespace SydneyOverlay
         }
         private void LoadLocalJSON()
         {
+            AandCList = new ObservableCollection<AreasAndConditions>();
             //Deserializes the local list of Areas and Conditions
             JsonSerializer ser = new JsonSerializer();
             try
             {
-                using (StreamReader sr = new System.IO.StreamReader("A2.txt"))
+                using (StreamReader sr = new System.IO.StreamReader("A3.txt"))
                 using (JsonReader reader = new JsonTextReader(sr))
                 {
 
                     JArray a = (JArray)ser.Deserialize(reader);
-                    AandCList = new ObservableCollection<AreasAndConditions>();
+                    //Get the individual Areas and conditions
                     foreach (var aac in a)
                     {
-                        AandCList.Add(JsonConvert.DeserializeObject<AreasAndConditions>(aac.ToString()));
+                        //Get the title
+                        string title = (string)aac.SelectToken("Title");
+
+                        //create an empty ASANDCS dictionary for
+                        Dictionary<string, List<string>> AsAndCsDictTemp = new Dictionary<string, List<string>>();
+                        //Convert JSON to
+                        IDictionary<string, JToken> AsAndCsTokens = (IDictionary<string, JToken>)aac.SelectToken("AsAndCs");
+                        foreach (KeyValuePair<string, JToken> s in AsAndCsTokens)
+                        {
+                            //Add each element of the dictionay to the temp dictionary
+                            AsAndCsDictTemp.Add(s.Key,(List<string>)JsonConvert.DeserializeObject(s.Value.ToString(), typeof(List<string>)));
+                        }
+
+                        AandCList.Add(new AreasAndConditions(title, AsAndCsDictTemp));
                     }
                 }
             }
             catch (FileNotFoundException e)
             {
-                AandCList = new ObservableCollection<AreasAndConditions>();
                 AandCList.Add(new AreasAndConditions());
             }
-            //Sets the first one in the list to the current one
-            AandC = AandCList[0];
         }
         #endregion
 
