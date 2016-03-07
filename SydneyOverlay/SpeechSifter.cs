@@ -11,7 +11,7 @@ namespace SydneyOverlay
         public SpeechRecognitionEngine sre;
         public string curWord = "";
         public string[] controlWords { get; set; }
-        private bool started = false;
+        private bool running = false;
         private Grammar oldGram;
         public SpeechSifter() { 
             sre = new SpeechRecognitionEngine();
@@ -38,10 +38,10 @@ namespace SydneyOverlay
                 sre.UnloadGrammar(oldGram);
             }
             oldGram = newGram;
-            if (!started)
+            
+            if (!running)
             {
-                sre.RecognizeAsync(RecognizeMode.Multiple);
-                started = true;
+                StartVoiceCommands();
             }
         }
         private string[] addControls(string[] choices)
@@ -67,6 +67,16 @@ namespace SydneyOverlay
             curWord = e.Result.Text;
         }
         */
+        public void StopVoiceCommands()
+        {
+            sre.RecognizeAsyncCancel();
+            sre.RecognizeAsyncStop();
+        }
+        public void StartVoiceCommands()
+        {
+            sre.RecognizeAsync(RecognizeMode.Multiple);
+            running = true;
+        }
 
     }
 

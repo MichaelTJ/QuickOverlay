@@ -68,7 +68,10 @@ namespace SydneyOverlay
             //Triggeres OverlayComboBOx_CHanged and sets the res of the boxes
             //Sets up the rest of the ComboCoxes
             OverlayComboBox.SelectedIndex = 0;
+
+            btnOptionsVoiceEnabled.IsChecked = true;
         }
+
         private void AandCList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //here to update the current A&C options
@@ -354,7 +357,10 @@ namespace SydneyOverlay
             if (nextBox == null)
             {
                 curComboBox = new ComboBox();
-                SpeechS.updateChoices(new string[] { });
+                if (btnOptionsVoiceEnabled.IsChecked)
+                {
+                    SpeechS.updateChoices(new string[] { });
+                }
             }
             else
             {
@@ -367,7 +373,11 @@ namespace SydneyOverlay
                 {
                     nextBoxItems.Add(s);
                 }
-                SpeechS.updateChoices(nextBoxItems.ToArray());
+                //check to make sure that the voice options command are turned on
+                if (btnOptionsVoiceEnabled.IsChecked)
+                {
+                    SpeechS.updateChoices(nextBoxItems.ToArray());
+                }
 
                 //dropdown menu = true
                 nextBox.IsDropDownOpen = true;
@@ -547,6 +557,15 @@ namespace SydneyOverlay
                 AandCList.Remove(AandC);
                 OverlayComboBox.SelectedIndex = 0;
                 UpdateOverlayCombobox();
+            }
+        }
+
+        private void btnOptionsVoiceEnabled_Click(object sender, RoutedEventArgs e)
+        {
+            //Turn of sre.recognize if the voice options are disabled
+            if (!btnOptionsVoiceEnabled.IsChecked)
+            {
+                SpeechS.StopVoiceCommands();
             }
         }
         

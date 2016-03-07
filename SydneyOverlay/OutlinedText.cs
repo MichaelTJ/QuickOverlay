@@ -292,7 +292,7 @@ namespace CustomXaml
             typeof(ushort),
             typeof(OutlinedText),
             new FrameworkPropertyMetadata(
-                 (ushort)0,
+                 (ushort)10,
                  FrameworkPropertyMetadataOptions.AffectsRender,
                  new PropertyChangedCallback(OnOutlineTextInvalidated),
                  null

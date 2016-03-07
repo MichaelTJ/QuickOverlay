@@ -24,6 +24,11 @@
                 <MenuItem Header="_Delete Current" Name="btnOverDeleteCurrent"
                           Click="btnOverDeleteCurrent_Click"/>
             </MenuItem>
+            <MenuItem Header="_Options">
+                <MenuItem Header="_Voice Commands On" Name="btnOptionsVoiceEnabled"
+                          Click="btnOptionsVoiceEnabled_Click"
+                          IsCheckable="True"/>
+            </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">
             <TextBlock DockPanel.Dock="Top" Text="Overlay Type:" 
