@@ -28,6 +28,9 @@
                 <MenuItem Header="_Voice Commands On" Name="btnOptionsVoiceEnabled"
                           Click="btnOptionsVoiceEnabled_Click"
                           IsCheckable="True"/>
+                <MenuItem Header="_BMDMediaExpress Mode" Name="btnMediaExpressEnabled"
+                          Click="btnMediaExpressEnabled_Click"
+                          IsCheckable="True"/>
             </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">
@@ -52,8 +55,11 @@
                      Name="DateText"
                      Margin="10,10,10,0"
                      Loaded="DateText_Loaded"/>
-            <TextBlock DockPanel.Dock="Top" Text="Area:" 
-                Margin="10,10,0,0"/>
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock DockPanel.Dock="Left" Text="Area:" 
+                    Margin="10,10,0,0"/>
+                <Rectangle Width="20" HorizontalAlignment="Left" Margin="10,10,0,0" Name="RectArea"/>
+            </DockPanel>
             <ComboBox
                 DockPanel.Dock="Top"
                 Name="AreasComboBox"
@@ -63,8 +69,11 @@
                 Width="200"
                 Loaded="ComboBox_Areas_Loaded"
                 SelectionChanged="ComboBox_Areas_SelectionChanged"/>
-            <TextBlock DockPanel.Dock="Top" Text="Issue:" 
-                Margin="10,10,0,0"/>
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock DockPanel.Dock="Left" Text="Issue:" 
+                    Margin="10,10,0,0"/>
+                <Rectangle Width="20" HorizontalAlignment="Left" Margin="10,10,0,0" Name="RectIssue"/>
+            </DockPanel>
 
             <ComboBox
                 DockPanel.Dock="Top"
@@ -75,9 +84,12 @@
                 Width="200"
                 Loaded="ComboBox_Criterias_Loaded"
                 SelectionChanged="ComboBox_Criterias_SelectionChanged"/>
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock DockPanel.Dock="Left" Text="Rating:" 
+                    Margin="10,10,0,0"/>
+                <Rectangle Width="20" HorizontalAlignment="Left" Margin="10,10,0,0" Name="RectRating"/>
+            </DockPanel>
 
-            <TextBlock DockPanel.Dock="Top" Text="Rating:" 
-                Margin="10,10,0,0"/>
             <ComboBox
                 DockPanel.Dock="Top"
                 Name="RatingComboBox"
@@ -87,9 +99,12 @@
                 Width="200"
                 Loaded="RatingComboBox_Loaded"
                 SelectionChanged="RatingComboBox_SelectionChanged"/>
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock DockPanel.Dock="Left" Text="Location:" 
+                    Margin="10,10,0,0"/>
+                <Rectangle Width="20" HorizontalAlignment="Left" Margin="10,10,0,0" Name="RectLocation"/>
+            </DockPanel>
 
-            <TextBlock DockPanel.Dock="Top" Text="Location:" 
-                Margin="10,10,0,0"/>
             <ComboBox
                 DockPanel.Dock="Top"
                 Name="LocationComboBox"

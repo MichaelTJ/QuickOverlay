@@ -1,19 +1,19 @@
 ﻿SydneyOverlay
 
 
-winexe
+exe
 C#
 .cs
-C:\Users\User\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\
 SydneyOverlay
 none
 false
 DEBUG;TRACE
-C:\Users\User\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\App.xaml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\App.xaml
 5854515674
 
 11-1528857107
-191153631762
+21-1595331579
 EditAsAndCs.xaml;EditText.xaml;MainWindow.xaml;NewAAC.xaml;Themes\Generic.xaml;
 
 False

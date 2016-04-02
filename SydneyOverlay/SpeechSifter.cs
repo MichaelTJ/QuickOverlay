@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Michael Jensen 2015
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,7 @@ namespace SydneyOverlay
             sre.SetInputToDefaultAudioDevice();
             sre.RecognizeCompleted += 
                 new EventHandler<RecognizeCompletedEventArgs>(RecognizeCompletedHandler);
+            //sre.LoadGrammarCompleted += new EventHandler<LoadGrammarCompletedEventArgs>(LoadgrammarCompletedHandler);
             /*
             sre.SpeechRecognized +=
                 new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
@@ -61,18 +63,21 @@ namespace SydneyOverlay
         private void RecognizeCompletedHandler(object sender, RecognizeCompletedEventArgs e)
         {
         }
-        /*
+        
         public void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             curWord = e.Result.Text;
         }
-        */
+
+        public void LoadgrammarCompletedHandler(object sender, LoadGrammarCompletedEventArgs e) { }
+        
         public void StopVoiceCommands()
         {
             sre.RecognizeAsyncCancel();
             sre.RecognizeAsyncStop();
+            running = false;
         }
-        public void StartVoiceCommands()
+        private void StartVoiceCommands()
         {
             sre.RecognizeAsync(RecognizeMode.Multiple);
             running = true;

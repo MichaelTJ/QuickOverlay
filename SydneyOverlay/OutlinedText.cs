@@ -1,4 +1,5 @@
-﻿using System;
+﻿//Michael Jensen 2015
+using System;
 using System.Windows.Media;
 using System.Globalization;
 using System.Windows;

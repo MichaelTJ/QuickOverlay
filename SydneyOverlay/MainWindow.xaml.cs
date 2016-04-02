@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Michael Jensen 2015
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +29,15 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using BMDMediaExpressInterfaceWPF;
+using Paloma;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
+using System.Diagnostics;
+
+
+
+
 
 
 namespace SydneyOverlay
@@ -45,6 +56,17 @@ namespace SydneyOverlay
         public SpeechSifter SpeechS;
         private ComboBox curComboBox;
         private bool dontRunSelectionChanged = false;
+
+        private BMDMediaExpressInterfaceWPF.MainWindow bmdm;
+        private bool bmdmIsRunning;
+        
+
+        //Used for switching windows
+        private Process MediaExpress;
+
+        private System.Windows.Shapes.Rectangle curRect;
+        
+        
         #endregion
 
 
@@ -58,8 +80,12 @@ namespace SydneyOverlay
             InitializeComponent();
             SpeechS.sre.SpeechRecognized +=
                 new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
+            /*SpeechS.sre.LoadGrammarCompleted +=
+                new EventHandler<LoadGrammarCompletedEventArgs>(LoadGrammarCompletedHandler);*/
+            //TODO
+
             SpeechS.controlWords = new string[] { "Write", "Save", "Discard" };
-            
+
             //LoadLocalJSON creates now AandCList if there's none
             LoadLocalJSON();
             UpdateOverlayCombobox();
@@ -69,8 +95,86 @@ namespace SydneyOverlay
             //Sets up the rest of the ComboCoxes
             OverlayComboBox.SelectedIndex = 0;
 
-            btnOptionsVoiceEnabled.IsChecked = true;
+            btnOptionsVoiceEnabled.IsChecked = false;
+
+            bmdm = new BMDMediaExpressInterfaceWPF.MainWindow();
+            bmdm.Show();
+            
+
+            //Add handler for new bmd images
+            bmdm.NewImage += bmdm_NewImage;
+
+            Process[] prc = Process.GetProcessesByName("MediaExpress");
+            if (prc.Length > 0)
+            {
+                MediaExpress = prc[0]; 
+                bmdmIsRunning = true;
+                //checkbox in the options menu
+                btnMediaExpressEnabled.IsChecked = true;
+                
+            }
+            else { bmdmIsRunning = false; }
+
+
+
         }
+
+        private void LoadGrammarCompletedHandler(object sender, LoadGrammarCompletedEventArgs e)
+        {
+            if (btnOptionsVoiceEnabled.IsChecked)
+            {
+                if (curRect != null)
+                {
+                    RectIssue.Fill = new SolidColorBrush(System.Windows
+                        .Media.Colors.Green);
+                }
+            }
+        }
+        private void ResetAllRects()
+        {
+            List<System.Windows.Shapes.Rectangle> rects = new List<System.Windows.Shapes.Rectangle>();
+            rects.Add(RectArea);
+            rects.Add(RectIssue);
+            rects.Add(RectLocation);
+            rects.Add(RectRating);
+            if (btnOptionsVoiceEnabled.IsChecked)
+            {
+                foreach (System.Windows.Shapes.Rectangle rectangle in rects)
+                {
+                    rectangle.Fill = new SolidColorBrush(System.Windows
+                    .Media.Colors.Red);
+                }
+            }
+            else
+            {
+                foreach (System.Windows.Shapes.Rectangle rectangle in rects)
+                {
+                    rectangle.Fill = new SolidColorBrush(System.Windows
+                    .Media.Colors.Gray);
+                }
+            }
+        }
+
+        void bmdm_NewImage(object sender, NewImageEventArgs e)
+        {
+
+            //needed as can be triggered by event from BMD
+            //Updates the UI in another thread - throws errors without
+            this.Dispatcher.Invoke((Action)(() =>
+                {
+                    foreach (string imagePath in e.GetPaths)
+                    {
+                        filesList.Add(imagePath);
+                    }
+                    setNextImage();
+
+                    if (bmdmIsRunning)
+                    {
+                        this.Activate();
+                    }
+                }));
+        }
+
 
         private void AandCList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -158,12 +262,14 @@ namespace SydneyOverlay
             //Necessary for freindly UI on startup
             //  SelectionChanged triggers ComboCox_Criterias.SelectionChanged
             //CriteriasComboBox.SelectedIndex = 0;
+            curRect = RectIssue;
             setCurComboBox(CriteriasComboBox);
         }
         private void ComboBox_Criterias_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
+            curRect = RectRating;
             setCurComboBox(RatingComboBox);
             //do something with 
             //string value = comboBox.SelectedItem as string
@@ -172,12 +278,15 @@ namespace SydneyOverlay
         {
             if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
+            curRect = RectLocation;
+
             setCurComboBox(LocationComboBox);
         }
         private void LocationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dontRunSelectionChanged) { return; }
             var comboBox = sender as ComboBox;
+            curRect = null;
             setCurComboBox(null);
             comboBox.IsDropDownOpen = false;
         }
@@ -190,10 +299,14 @@ namespace SydneyOverlay
             if (filesList.Count == 0) { return; }
             SaveImageToFile(imgPhoto, filesList[0]);
             SaveLabelsToText(filesList[0]);
-
+            
             //Discard and set over the image
             filesList.RemoveAt(0);
             setNextImage();
+            if (bmdmIsRunning)
+            {
+                SetForegroundWindow(MediaExpress.MainWindowHandle);
+            }
         }
         private void Discard_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -201,6 +314,10 @@ namespace SydneyOverlay
             //Skip over the image
             filesList.RemoveAt(0);
             setNextImage();
+            if (bmdmIsRunning)
+            {
+                SetForegroundWindow(MediaExpress.MainWindowHandle);
+            }
         }
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -239,7 +356,7 @@ namespace SydneyOverlay
         #endregion
 
 
-        #region Funcitons
+        #region Functions
         private void WriteComment(System.Windows.Controls.Image image)
         {
 
@@ -271,7 +388,7 @@ namespace SydneyOverlay
             imgPhoto.Source = newImage;
 
         }
-        private static void SaveImageToFile(System.Windows.Controls.Image imageIn, string filePath)
+        private void SaveImageToFile(System.Windows.Controls.Image imageIn, string filePath)
         {
             if (imageIn.Source == null) { return; }
 
@@ -318,7 +435,7 @@ namespace SydneyOverlay
             File.WriteAllLines(newPathGoodExtension, combinedText);
 
         }
-        private static string GetSaveToFilePath(string imgFilePath)
+        private string GetSaveToFilePath(string imgFilePath)
         {
             string directory = System.IO.Path.GetDirectoryName(imgFilePath);
             string[] labelsDir = Directory.GetDirectories(directory, "Labelled Images", SearchOption.TopDirectoryOnly);
@@ -327,6 +444,16 @@ namespace SydneyOverlay
             {
                 //create a new folder
                 Directory.CreateDirectory(newDir);
+            }
+            //Change name of filepath here
+            if (bmdmIsRunning)
+            {
+                string newName = string.Format("{0} {1} {2:dd-MM-yyyy}.png",
+                    IDText.Text,
+                    AreasComboBox.SelectedItem as string,
+                    DateTime.Now);
+
+                return System.IO.Path.Combine(newDir, newName);
             }
             return System.IO.Path.Combine(newDir, System.IO.Path.GetFileName(imgFilePath));
             //save to filpath
@@ -343,17 +470,41 @@ namespace SydneyOverlay
             }
             else
             {
-                imgPhoto.Source = new BitmapImage(new Uri(filesList[0]));
-                uneditedImg.Source = new BitmapImage(new Uri(filesList[0]));
+                //Used for dealing with .tga images
+                string extension = System.IO.Path.GetExtension(filesList[0]);
+
+                if (string.Compare(extension, ".tga") == 0)
+                {
+                    using (MemoryStream memory = new MemoryStream())
+                    {
+                        Paloma.TargaImage.LoadTargaImage(filesList[0]).Save(memory, ImageFormat.Bmp);
+                        memory.Position = 0;
+                        BitmapImage bitmapImage = new BitmapImage();
+                        bitmapImage.BeginInit();
+                        bitmapImage.StreamSource = memory;
+                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmapImage.EndInit();
+                        imgPhoto.Source = bitmapImage;
+                        uneditedImg.Source = bitmapImage;
+                    }
+                }
+                else
+                {
+                    imgPhoto.Source = new BitmapImage(new Uri(filesList[0]));
+                    uneditedImg.Source = new BitmapImage(new Uri(filesList[0]));
+                }
             }
 
+            curRect = RectArea;
             setCurComboBox(AreasComboBox);
+            
         }
         public void setCurComboBox(ComboBox nextBox)
         {
             //CurComboBox is the identifyer for the currently selected Cbox
             //It's items are passed to the grammar recognizer
             //And its options are made visible through IsDropDown=true
+            ResetAllRects();
             if (nextBox == null)
             {
                 curComboBox = new ComboBox();
@@ -416,10 +567,18 @@ namespace SydneyOverlay
                         SaveLabelsToText(filesList[0]);
                         filesList.RemoveAt(0);
                         setNextImage();
+                        if (bmdmIsRunning)
+                        {
+                            SetForegroundWindow(MediaExpress.MainWindowHandle);
+                        }
                         break;
                     case "Discard":
                         filesList.RemoveAt(0);
                         setNextImage();
+                        if (bmdmIsRunning)
+                        {
+                            SetForegroundWindow(MediaExpress.MainWindowHandle);
+                        }
                         break;
                     default:
                         //do nothing
@@ -545,6 +704,7 @@ namespace SydneyOverlay
             //comboBox.SelectedIndex = 0;
             //AreasComboBox.SelectedItem = null;
             dontRunSelectionChanged = false;
+            curRect = RectArea;
             setCurComboBox(AreasComboBox);
         }
 
@@ -565,7 +725,54 @@ namespace SydneyOverlay
             //Turn of sre.recognize if the voice options are disabled
             if (!btnOptionsVoiceEnabled.IsChecked)
             {
+                curRect = null;
                 SpeechS.StopVoiceCommands();
+            }
+            else
+            {
+                curRect = null;
+                SpeechS.updateChoices(new string[]{});
+            }
+        }
+
+        [DllImport("user32.dll")]
+        static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int X,
+            int Y,
+            int cx,
+            int cy,
+            uint uFlags);
+
+        const UInt32 SWP_NOSIZE = 0x0001;
+        const UInt32 SWP_NOMOVE = 0x0002;
+
+        static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private void btnMediaExpressEnabled_Click(object sender, RoutedEventArgs e)
+        {
+            if (btnMediaExpressEnabled.IsChecked)
+            {
+                //if is checked then search for bmme process
+                Process[] prc = Process.GetProcessesByName("MediaExpress");
+                if (prc.Length > 0)
+                {
+                    MediaExpress = prc[0];
+                    bmdmIsRunning = true;
+                }
+                else { 
+                    bmdmIsRunning = false;
+                    btnMediaExpressEnabled.IsChecked = false;
+                    MessageBox.Show("Blackmagic Media Express could not be found running in the background");
+                }
+            }
+            else
+            {
+                bmdmIsRunning = false;
             }
         }
         
