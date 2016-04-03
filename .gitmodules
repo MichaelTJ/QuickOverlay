@@ -1,0 +1,6 @@
+[submodule "BMDMediaExpressInterfaceWPF"]
+	path = BMDMediaExpressInterfaceWPF
+	url = https://github.com/MichaelTJ/BMDMediaExpressInterfaceWPF
+[submodule "TargaImage"]
+	path = TargaImage
+	url = https://github.com/MichaelTJ/TargaImage
