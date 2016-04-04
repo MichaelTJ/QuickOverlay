@@ -38,6 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BMDMediaExpressInterfaceWPF">
+      <HintPath>..\..\AUSROV\BMDMediaExpressInterfaceWPF\BMDMediaExpressInterfaceWPF\bin\Debug\BMDMediaExpressInterfaceWPF.exe</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -61,9 +64,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="TargaImage, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Downloads\TargaImage_src-noexe\obj\Debug\TargaImage.dll</HintPath>
+    <Reference Include="TargaImage">
+      <HintPath>..\..\AUSROV\TargaImage_src-noexe\bin\Debug\TargaImage.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -145,12 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\BMDMediaExpressInterfaceWPF\BMDMediaExpressInterfaceWPF\BMDMediaExpressInterfaceWPF.csproj">
-      <Project>{4ed42e45-443d-407c-9f01-89588db16ddc}</Project>
-      <Name>BMDMediaExpressInterfaceWPF</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
