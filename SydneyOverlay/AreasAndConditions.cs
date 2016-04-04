@@ -32,11 +32,6 @@ namespace SydneyOverlay
 
             string[] conditions = {"Corrosion",
                                   "Weak",
-                                  "Too strong",
-                                  "Human error",
-                                  "Nuclear",
-                                  "Needs Help",
-                                  "Bad Reception",
                                   "Other"};
             Random RandString = new Random();
             foreach (string s in areas)

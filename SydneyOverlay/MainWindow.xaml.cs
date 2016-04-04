@@ -35,11 +35,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Diagnostics;
 
-
-
-
-
-
 namespace SydneyOverlay
 {
     /// <summary>
@@ -636,9 +631,11 @@ namespace SydneyOverlay
         private void saveLocalJSON()
         {
 
+            var fileName = System.IO.Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData), "AUSROV", "AreasAndConditions.txt");
             MemoryStream ms = new System.IO.MemoryStream();
             JsonSerializer ser = new JsonSerializer();
-            using (StreamWriter sw = new System.IO.StreamWriter("A3.txt"))
+            using (StreamWriter sw = new System.IO.StreamWriter(fileName))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 ser.Serialize(writer, AandCList);
@@ -650,37 +647,54 @@ namespace SydneyOverlay
             AandCList = new ObservableCollection<AreasAndConditions>();
             //Deserializes the local list of Areas and Conditions
             JsonSerializer ser = new JsonSerializer();
-            try
+
+            var fileName = System.IO.Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData), "AUSROV", "AreasAndConditions.txt");
+            if (File.Exists(fileName))
             {
-                using (StreamReader sr = new System.IO.StreamReader("A3.txt"))
-                using (JsonReader reader = new JsonTextReader(sr))
+                try
                 {
-
-                    JArray a = (JArray)ser.Deserialize(reader);
-                    //Get the individual Areas and conditions
-                    foreach (var aac in a)
+                    using (StreamReader sr = new System.IO.StreamReader(fileName))
+                    using (JsonReader reader = new JsonTextReader(sr))
                     {
-                        //Get the title
-                        string title = (string)aac.SelectToken("Title");
 
-                        //create an empty ASANDCS dictionary for
-                        Dictionary<string, List<string>> AsAndCsDictTemp = new Dictionary<string, List<string>>();
-                        //Convert JSON to
-                        IDictionary<string, JToken> AsAndCsTokens = (IDictionary<string, JToken>)aac.SelectToken("AsAndCs");
-                        foreach (KeyValuePair<string, JToken> s in AsAndCsTokens)
+                        JArray a = (JArray)ser.Deserialize(reader);
+                        //Get the individual Areas and conditions
+                        foreach (var aac in a)
                         {
-                            //Add each element of the dictionay to the temp dictionary
-                            AsAndCsDictTemp.Add(s.Key,(List<string>)JsonConvert.DeserializeObject(s.Value.ToString(), typeof(List<string>)));
-                        }
+                            //Get the title
+                            string title = (string)aac.SelectToken("Title");
 
-                        AandCList.Add(new AreasAndConditions(title, AsAndCsDictTemp));
+                            //create an empty ASANDCS dictionary for
+                            Dictionary<string, List<string>> AsAndCsDictTemp = new Dictionary<string, List<string>>();
+                            //Convert JSON to
+                            IDictionary<string, JToken> AsAndCsTokens = (IDictionary<string, JToken>)aac.SelectToken("AsAndCs");
+                            foreach (KeyValuePair<string, JToken> s in AsAndCsTokens)
+                            {
+                                //Add each element of the dictionay to the temp dictionary
+                                AsAndCsDictTemp.Add(s.Key, (List<string>)JsonConvert.DeserializeObject(s.Value.ToString(), typeof(List<string>)));
+                            }
+
+                            AandCList.Add(new AreasAndConditions(title, AsAndCsDictTemp));
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
-            catch (FileNotFoundException e)
+            else
             {
-                AandCList.Add(new AreasAndConditions());
+                if (!Directory.Exists(System.IO.Path.GetDirectoryName(fileName)))
+                {
+                    Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fileName));
+                }
+                File.Create(fileName);
             }
+            //Adds the default areas and conditions to the pprogram
+            AandCList.Add(new AreasAndConditions());
+            
         }
         #endregion
 
