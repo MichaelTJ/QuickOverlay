@@ -40,7 +40,7 @@ namespace SydneyOverlay
 
         private void AreasListBox_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (string s in AsAndCs.getAreas())
+            foreach (string s in AsAndCs.GetAreas())
             {
                 AreasListBox.Items.Add(s);
             }
@@ -56,7 +56,7 @@ namespace SydneyOverlay
         {
             if (!(txtBoxAddArea.Text == "" || txtBoxAddArea.Text == null))
             {
-                AsAndCs.addArea(txtBoxAddArea.Text);
+                AsAndCs.AddArea(txtBoxAddArea.Text);
             }
             updateAreas();
         }
@@ -65,8 +65,7 @@ namespace SydneyOverlay
         {
             if (!(txtBoxAddCondiition.Text == "" || txtBoxAddCondiition.Text == null))
             {
-                AsAndCs.addCondition(AreasListBox.SelectedItem as string,
-                    txtBoxAddCondiition.Text);
+                AsAndCs.AddCondition(txtBoxAddCondiition.Text);
             }
             updateConditions();
         }
@@ -76,7 +75,7 @@ namespace SydneyOverlay
             tempDisabled = true;
             AreasListBox.Items.Clear();
 
-            foreach (string s in AsAndCs.getAreas())
+            foreach (string s in AsAndCs.GetAreas())
             {
                 AreasListBox.Items.Add(s);
             }
@@ -88,7 +87,7 @@ namespace SydneyOverlay
         {
             var curSelected = AreasListBox.SelectedItem as string;
             ConditionsListBox.Items.Clear();
-            foreach (string s in AsAndCs.getConditions(curSelected))
+            foreach (string s in AsAndCs.GetConditions(curSelected))
             {
                 ConditionsListBox.Items.Add(s);
             }
@@ -106,7 +105,7 @@ namespace SydneyOverlay
         {
             if (AreasListBox.SelectedItem != null)
             {
-                AsAndCs.removeArea(AreasListBox.SelectedItem as string);
+                AsAndCs.RemoveArea(AreasListBox.SelectedItem as string);
                 updateAreas();
             }
         }
@@ -117,8 +116,7 @@ namespace SydneyOverlay
             {
                 if (AreasListBox.SelectedItem != null)
                 {
-                    AsAndCs.removeCondition(AreasListBox.SelectedItem as string, 
-                        ConditionsListBox.SelectedItem as string);
+                    AsAndCs.RemoveCondition(ConditionsListBox.SelectedItem as string);
                     updateConditions();
                 }
             }

@@ -61,11 +61,11 @@ namespace SydneyOverlay
         {
             if (isArea)
             {
-                AsAndCs.updateArea(areaIn, txtBoxNew.Text);
+                AsAndCs.UpdateArea(areaIn, txtBoxNew.Text);
             }
             if (isCondition)
             {
-                AsAndCs.updateCondition(areaIn,conditionIn, txtBoxNew.Text);
+                AsAndCs.UpdateCondition(conditionIn, txtBoxNew.Text);
             }
 
             Close();

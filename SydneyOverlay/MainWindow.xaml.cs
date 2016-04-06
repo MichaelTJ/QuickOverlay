@@ -186,7 +186,7 @@ namespace SydneyOverlay
         private void ComboBox_Areas_Loaded(object sender, RoutedEventArgs e)
         {
             var comboBox = sender as ComboBox;
-            comboBox.ItemsSource = AandC.getAreas();
+            comboBox.ItemsSource = AandC.GetAreas();
 
             //comboBox.SelectedIndex = 0;
             CriteriasComboBox.IsDropDownOpen = false;
@@ -252,7 +252,7 @@ namespace SydneyOverlay
             //get the selected item
             string value = comboBox.SelectedItem as string;
             //set the conditions to selecteditem
-            CriteriasComboBox.ItemsSource = AandC.getConditions(value);
+            CriteriasComboBox.ItemsSource = AandC.GetConditions(value);
 
             //Necessary for freindly UI on startup
             //  SelectionChanged triggers ComboCox_Criterias.SelectionChanged
@@ -631,11 +631,13 @@ namespace SydneyOverlay
         private void saveLocalJSON()
         {
 
+            
             var fileName = System.IO.Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), "AUSROV", "AreasAndConditions.txt");
             MemoryStream ms = new System.IO.MemoryStream();
             JsonSerializer ser = new JsonSerializer();
-            using (StreamWriter sw = new System.IO.StreamWriter(fileName))
+            //false implies overwrite don't append
+            using (StreamWriter sw = new System.IO.StreamWriter(fileName,false))
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 ser.Serialize(writer, AandCList);
@@ -665,6 +667,8 @@ namespace SydneyOverlay
                             //Get the title
                             string title = (string)aac.SelectToken("Title");
 
+                            //Pre refactored asandcs
+                            /*
                             //create an empty ASANDCS dictionary for
                             Dictionary<string, List<string>> AsAndCsDictTemp = new Dictionary<string, List<string>>();
                             //Convert JSON to
@@ -675,7 +679,13 @@ namespace SydneyOverlay
                                 AsAndCsDictTemp.Add(s.Key, (List<string>)JsonConvert.DeserializeObject(s.Value.ToString(), typeof(List<string>)));
                             }
 
-                            AandCList.Add(new AreasAndConditions(title, AsAndCsDictTemp));
+                            AandCList.Add(new AreasAndConditions(title, AsAndCsDictTemp));*/
+                            //No straight method for Jarray to List
+
+                            List<string> areas = aac.SelectToken("Areas").ToObject<string[]>().ToList<string>();
+                            List<string> conditions = aac.SelectToken("Conditions").ToObject<string[]>().ToList<string>();
+                            
+                            AandCList.Add(new AreasAndConditions(title, areas, conditions));
                         }
                     }
                 }
@@ -692,8 +702,11 @@ namespace SydneyOverlay
                 }
                 File.Create(fileName);
             }
-            //Adds the default areas and conditions to the pprogram
-            AandCList.Add(new AreasAndConditions());
+            if (AandCList.Count == 0)
+            {
+                //Adds the default areas and conditions to the pprogram
+                AandCList.Add(new AreasAndConditions());
+            }
             
         }
         #endregion
@@ -713,7 +726,7 @@ namespace SydneyOverlay
         {
             dontRunSelectionChanged = true;
             AandC = AandCList[OverlayComboBox.SelectedIndex];
-            AreasComboBox.ItemsSource = AandC.getAreas();
+            AreasComboBox.ItemsSource = AandC.GetAreas();
             CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
             //comboBox.SelectedIndex = 0;
             //AreasComboBox.SelectedItem = null;

@@ -8,15 +8,20 @@ namespace SydneyOverlay
 {
     public class AreasAndConditions
     {
-        public Dictionary<string, List<string>> AsAndCs;
-        public string Title;
+
+        //Made public only so that the JsonWriter can read variables
+        public List<string> Areas;
+        public List<string> Conditions;
+            
+            //Dictionary<string, List<string>> AsAndCs;
+        public string Title{get;set;}
 
         public AreasAndConditions()
         {
-            AsAndCs = new Dictionary<string, List<string>>();
-            Title = "Standard Tank Inspection";
+            //AsAndCs = new Dictionary<string, List<string>>();
+            this.Title = "Standard Tank Inspection";
 
-            string[] areas = { "Walls Internal",
+            this.Areas = new List<string>{ "Walls Internal",
                                  "Walls External",
                                  "Entry Hatch",
                                  "Roof Platform",
@@ -30,9 +35,10 @@ namespace SydneyOverlay
                                  "Floor"
                              };
 
-            string[] conditions = {"Corrosion",
-                                  "Weak",
+            this.Conditions = new List<string>{"Corrosion",
+                                  "Paint Cracking",
                                   "Other"};
+            /*
             Random RandString = new Random();
             foreach (string s in areas)
             {
@@ -41,34 +47,42 @@ namespace SydneyOverlay
                 AsAndCs[s].Add(conditions[RandString.Next(0, conditions.Length)]);
                 AsAndCs[s].Add(conditions[RandString.Next(0, conditions.Length)]);
                 AsAndCs[s].Add(conditions[RandString.Next(0, conditions.Length)]);
-            }
+            }*/
         }
 
-        public AreasAndConditions(string TitleIn, Dictionary<string, List<string>> AsAndCsIn)
+        public AreasAndConditions(string titleIn, List<string> areas, List<string> conditions)
         {
-            Title = TitleIn;
-            AsAndCs = AsAndCsIn;
+            this.Title = titleIn;
+            this.Areas = areas;
+            this.Conditions = conditions;
+            //AsAndCs = AsAndCsIn;
         }
 
         
 
-        public AreasAndConditions(string name)
+        public AreasAndConditions(string title)
         {
-            AsAndCs = new Dictionary<string, List<string>>();
-            Title = name;
+            //AsAndCs = new Dictionary<string, List<string>>();
+            this.Areas = new List<string>();
+            this.Conditions = new List<string>();
+            this.Title = title;
         }
-        public List<string> getAreas()
+        public List<string> GetAreas()
         {
-            return AsAndCs.Keys.ToList();
-        }
-
-        public List<string> getConditions(string area)
-        {
-            return AsAndCs[area];
+            //return AsAndCs.Keys.ToList();
+            return Areas;
         }
 
-        public void addArea(string Area)
+        public List<string> GetConditions(string area)
         {
+            //return AsAndCs[area];
+            return Conditions;
+        }
+
+        //
+        public void AddArea(string area)
+        {
+            /*
             if (AsAndCs.ContainsKey(Area))
             {
                 System.Windows.MessageBox.Show(String.Format("That area {0} already exists.", Area));
@@ -76,45 +90,80 @@ namespace SydneyOverlay
             }
 
             AsAndCs.Add(Area, new List<string>());
+             * */
+            if (Areas.Contains(area))
+            {
+                System.Windows.MessageBox.Show(String.Format("That area {0} already exists.", area));
+            }
+            else { Areas.Add(area); }
+
         }
-        public void addCondition(string Area, string Condition)
+        public void AddCondition(string condition)
         {
+            /*
             //TODO: Add exceptionhandler if there's no selected key in areas
             if (AsAndCs.ContainsKey(Area))
             {
                 AsAndCs[Area].Add(Condition);
+            }*/
+
+            if (Conditions.Contains(condition))
+            {
+                System.Windows.MessageBox.Show(String.Format("The condition {0} already exists.", condition));
             }
+            else { Conditions.Add(condition); }
+            
         }
-        public void removeArea(string Area)
+        public void RemoveArea(string area)
         {
+            /*
             if (AsAndCs.ContainsKey(Area))
             {
                 AsAndCs.Remove(Area);
+            }*/
+            if (Areas.Contains(area))
+            {
+                Areas.Remove(area);
             }
+            else { System.Windows.MessageBox.Show("That area does not exist."); }
         }
-        public void removeCondition(string Area, string Condition)
+        public void RemoveCondition(string condition)
         {
+            /*
             if (AsAndCs.ContainsKey(Area))
             {
                 if (AsAndCs[Area].Contains(Condition))
                 {
                     AsAndCs[Area].Remove(Condition);
                 }
+            }*/
+            if (Conditions.Contains(condition))
+            {
+                Conditions.Remove(condition);
             }
+            else { System.Windows.MessageBox.Show("That condition does not exist."); }
+
         }
 
-        public void updateArea(string oldArea, string newArea)
+        public void UpdateArea(string oldArea, string newArea)
         {
+            /*
             if (AsAndCs.ContainsKey(oldArea))
             {
                 List<string> oldList = AsAndCs[oldArea];
                 AsAndCs.Remove(oldArea);
                 AsAndCs.Add(newArea, oldList);
+            }*/
+            if (Areas.Contains(oldArea))
+            {
+                Areas.Remove(oldArea);
+                Areas.Add(newArea);
             }
         }
 
-        public void updateCondition(string Area, string oldCondition, string newCondition)
+        public void UpdateCondition(string oldCondition, string newCondition)
         {
+            /*
             if (AsAndCs.ContainsKey(Area))
             {
                 if (AsAndCs[Area].Contains(oldCondition))
@@ -122,12 +171,13 @@ namespace SydneyOverlay
                     AsAndCs[Area].Remove(oldCondition);
                     AsAndCs[Area].Add(newCondition);
                 }
+            }*/
+            if (Conditions.Contains(oldCondition))
+            {
+                Conditions.Remove(oldCondition);
+                Conditions.Add(newCondition);
             }
         }
-        //Save
-        //Open
-        //Choose which template
-
     }
     
 
