@@ -585,7 +585,8 @@ namespace SydneyOverlay
                         if (bmdmIsRunning)
                         {
                             SetForegroundWindow(MediaExpress.MainWindowHandle);
-                            TriggerBmdmSnapshot();
+
+                            PressSpace.Press();
                         }
                         break;
                     default:
@@ -816,21 +817,5 @@ namespace SydneyOverlay
             }
         }
 
-        private void TriggerBmdmSnapshot()
-        {
-            var key = Key.Space;
-            var target = Keyboard.FocusedElement;
-            var routedEvent = Keyboard.KeyDownEvent;
-
-            target.RaiseEvent(
-                new KeyEventArgs(
-                    Keyboard.PrimaryDevice,
-                    Keyboard.PrimaryDevice.ActiveSource,
-                    0,
-                    key) 
-                    { RoutedEvent = routedEvent }
-                    );
-        }
-        
     }
 }
