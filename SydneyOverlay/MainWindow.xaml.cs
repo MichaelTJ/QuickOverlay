@@ -53,7 +53,6 @@ namespace SydneyOverlay
         private bool dontRunSelectionChanged = false;
 
         private BMDMediaExpressInterfaceWPF.MainWindow bmdm;
-        private bool bmdmIsRunning;
         
 
         //Used for switching windows
@@ -101,13 +100,12 @@ namespace SydneyOverlay
             Process[] prc = Process.GetProcessesByName("MediaExpress");
             if (prc.Length > 0)
             {
-                MediaExpress = prc[0]; 
-                bmdmIsRunning = true;
-                //checkbox in the options menu
+                MediaExpress = prc[0];
                 btnMediaExpressEnabled.IsChecked = true;
+                //checkbox in the options menu
                 
             }
-            else { bmdmIsRunning = false; }
+            else { btnMediaExpressEnabled.IsChecked = false; }
 
 
 
@@ -162,7 +160,7 @@ namespace SydneyOverlay
                     }
                     setNextImage();
 
-                    if (bmdmIsRunning)
+                    if (btnMediaExpressEnabled.IsChecked)
                     {
                         this.Activate();
                     }
@@ -283,6 +281,7 @@ namespace SydneyOverlay
             curRect = null;
             setCurComboBox(null);
             comboBox.IsDropDownOpen = false;
+            WriteComment(uneditedImg);
         }
         private void Write_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -298,7 +297,7 @@ namespace SydneyOverlay
             //Discard and set over the image
             filesList.RemoveAt(0);
             setNextImage();
-            if (bmdmIsRunning)
+            if (btnMediaExpressEnabled.IsChecked)
             {
                 SetForegroundWindow(MediaExpress.MainWindowHandle);
             }
@@ -309,7 +308,7 @@ namespace SydneyOverlay
             //Skip over the image
             filesList.RemoveAt(0);
             setNextImage();
-            if (bmdmIsRunning)
+            if (btnMediaExpressEnabled.IsChecked)
             {
                 SetForegroundWindow(MediaExpress.MainWindowHandle);
             }
@@ -443,7 +442,7 @@ namespace SydneyOverlay
                 Directory.CreateDirectory(newDir);
             }
             //Change name of filepath here
-            if (bmdmIsRunning)
+            if (btnMediaExpressEnabled.IsChecked)
             {
                 string newName = string.Format("{0} {1} {2:dd-MM-yyyy}.png",
                     IDText.Text,
@@ -566,7 +565,7 @@ namespace SydneyOverlay
                         SaveLabelsToText(filesList[0]);
                         filesList.RemoveAt(0);
                         setNextImage();
-                        if (bmdmIsRunning)
+                        if (btnMediaExpressEnabled.IsChecked)
                         {
                             SetForegroundWindow(MediaExpress.MainWindowHandle);
                         }
@@ -575,13 +574,13 @@ namespace SydneyOverlay
                         if (filesList.Count == 0) { return; }
                         filesList.RemoveAt(0);
                         setNextImage();
-                        if (bmdmIsRunning)
+                        if (btnMediaExpressEnabled.IsChecked)
                         {
                             SetForegroundWindow(MediaExpress.MainWindowHandle);
                         }
                         break;
                     case "Take":
-                        if (bmdmIsRunning)
+                        if (btnMediaExpressEnabled.IsChecked)
                         {
                             SetForegroundWindow(MediaExpress.MainWindowHandle);
                             bmdmHack.PressCtrlG();
@@ -802,17 +801,16 @@ namespace SydneyOverlay
                 if (prc.Length > 0)
                 {
                     MediaExpress = prc[0];
-                    bmdmIsRunning = true;
+                    btnMediaExpressEnabled.IsChecked = true;
                 }
-                else { 
-                    bmdmIsRunning = false;
+                else {
                     btnMediaExpressEnabled.IsChecked = false;
                     MessageBox.Show("Blackmagic Media Express could not be found running in the background");
                 }
             }
             else
             {
-                bmdmIsRunning = false;
+                btnMediaExpressEnabled.IsChecked = false;
             }
         }
 
