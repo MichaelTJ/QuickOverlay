@@ -94,7 +94,6 @@ namespace SydneyOverlay
 
             bmdm = new BMDMediaExpressInterfaceWPF.MainWindow();
             bmdm.Show();
-            
 
             //Add handler for new bmd images
             bmdm.NewImage += bmdm_NewImage;
@@ -585,9 +584,9 @@ namespace SydneyOverlay
                         if (bmdmIsRunning)
                         {
                             SetForegroundWindow(MediaExpress.MainWindowHandle);
-
-                            PressSpace.Press();
+                            bmdmHack.PressCtrlG();
                         }
+
                         break;
                     default:
                         //do nothin

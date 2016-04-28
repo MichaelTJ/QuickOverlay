@@ -81,6 +81,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AreasAndConditions.cs" />
+    <Compile Include="bmdmHack.cs" />
     <Compile Include="EditAsAndCs.xaml.cs">
       <DependentUpon>EditAsAndCs.xaml</DependentUpon>
     </Compile>
@@ -90,7 +91,6 @@
     <Compile Include="NewAAC.xaml.cs">
       <DependentUpon>NewAAC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PressSpace.cs" />
     <Compile Include="SpeechSifter.cs" />
     <Page Include="EditAsAndCs.xaml">
       <SubType>Designer</SubType>
