@@ -75,11 +75,11 @@ namespace SydneyOverlay
             InitializeComponent();
             SpeechS.sre.SpeechRecognized +=
                 new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
-            /*SpeechS.sre.LoadGrammarCompleted +=
-                new EventHandler<LoadGrammarCompletedEventArgs>(LoadGrammarCompletedHandler);*/
+            SpeechS.sre.LoadGrammarCompleted +=
+                new EventHandler<LoadGrammarCompletedEventArgs>(LoadGrammarCompletedHandler);
             //TODO
 
-            SpeechS.controlWords = new string[] { "Write", "Save", "Discard" };
+            SpeechS.controlWords = new string[] { "Write", "Save", "Discard", "Take" };
 
             //LoadLocalJSON creates now AandCList if there's none
             LoadLocalJSON();
@@ -120,7 +120,7 @@ namespace SydneyOverlay
             {
                 if (curRect != null)
                 {
-                    RectIssue.Fill = new SolidColorBrush(System.Windows
+                    curRect.Fill = new SolidColorBrush(System.Windows
                         .Media.Colors.Green);
                 }
             }
@@ -292,6 +292,7 @@ namespace SydneyOverlay
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
             if (filesList.Count == 0) { return; }
+            
             SaveImageToFile(imgPhoto, filesList[0]);
             SaveLabelsToText(filesList[0]);
             
@@ -369,8 +370,10 @@ namespace SydneyOverlay
             System.Windows.Media.Pen pen = new System.Windows.Media.Pen(System.Windows.Media.Brushes.Black, 1);
             using (DrawingContext drawingContext = visual.RenderOpen())
             {
+                int textLeftMargin = -5;
+                int textTopMargin = -5;
                 drawingContext.DrawImage(image.Source,
-                    new Rect(0, 0, image.Source.Width, image.Source.Height));
+                    new Rect(textLeftMargin, textTopMargin, image.Source.Width, image.Source.Height));
                 drawingContext.DrawGeometry(System.Windows.Media.Brushes.White, pen, TextContent._textGeometry);
                 /*
                 drawingContext.DrawText(
@@ -387,11 +390,11 @@ namespace SydneyOverlay
         {
             if (imageIn.Source == null) { return; }
 
-            RenderTargetBitmap rtBmp = new RenderTargetBitmap((int)imageIn.ActualWidth, (int)imageIn.ActualHeight,
+            RenderTargetBitmap rtBmp = new RenderTargetBitmap((int)imageIn.Source.Width, (int)imageIn.Source.Height,
                 96.0, 96.0, PixelFormats.Pbgra32);
 
-            imageIn.Measure(new System.Windows.Size((int)imageIn.ActualWidth, (int)imageIn.ActualHeight));
-            imageIn.Arrange(new Rect(new System.Windows.Size((int)imageIn.ActualWidth, (int)imageIn.ActualHeight)));
+            imageIn.Measure(new System.Windows.Size((int)imageIn.Source.Width, (int)imageIn.Source.Height));
+            imageIn.Arrange(new Rect(new System.Windows.Size((int)imageIn.Source.Width, (int)imageIn.Source.Height)));
 
             rtBmp.Render(imageIn);
 
@@ -488,6 +491,7 @@ namespace SydneyOverlay
                     imgPhoto.Source = new BitmapImage(new Uri(filesList[0]));
                     uneditedImg.Source = new BitmapImage(new Uri(filesList[0]));
                 }
+                imgPhoto.Stretch = Stretch.Uniform;
             }
 
             curRect = RectArea;
@@ -558,6 +562,7 @@ namespace SydneyOverlay
                         WriteComment(uneditedImg);
                         break;
                     case "Save":
+                        if (filesList.Count == 0) { return; }
                         SaveImageToFile(imgPhoto, filesList[0]);
                         SaveLabelsToText(filesList[0]);
                         filesList.RemoveAt(0);
@@ -568,6 +573,7 @@ namespace SydneyOverlay
                         }
                         break;
                     case "Discard":
+                        if (filesList.Count == 0) { return; }
                         filesList.RemoveAt(0);
                         setNextImage();
                         if (bmdmIsRunning)
@@ -575,8 +581,15 @@ namespace SydneyOverlay
                             SetForegroundWindow(MediaExpress.MainWindowHandle);
                         }
                         break;
+                    case "Take":
+                        if (bmdmIsRunning)
+                        {
+                            SetForegroundWindow(MediaExpress.MainWindowHandle);
+                            TriggerBmdmSnapshot();
+                        }
+                        break;
                     default:
-                        //do nothing
+                        //do nothin
                         break;
                 }
             }
@@ -801,6 +814,22 @@ namespace SydneyOverlay
             {
                 bmdmIsRunning = false;
             }
+        }
+
+        private void TriggerBmdmSnapshot()
+        {
+            var key = Key.Space;
+            var target = Keyboard.FocusedElement;
+            var routedEvent = Keyboard.KeyDownEvent;
+
+            target.RaiseEvent(
+                new KeyEventArgs(
+                    Keyboard.PrimaryDevice,
+                    Keyboard.PrimaryDevice.ActiveSource,
+                    0,
+                    key) 
+                    { RoutedEvent = routedEvent }
+                    );
         }
         
     }

@@ -20,7 +20,8 @@ namespace SydneyOverlay
             sre.SetInputToDefaultAudioDevice();
             sre.RecognizeCompleted += 
                 new EventHandler<RecognizeCompletedEventArgs>(RecognizeCompletedHandler);
-            //sre.LoadGrammarCompleted += new EventHandler<LoadGrammarCompletedEventArgs>(LoadgrammarCompletedHandler);
+            sre.LoadGrammarCompleted += new EventHandler<LoadGrammarCompletedEventArgs>(LoadgrammarCompletedHandler);
+            
             /*
             sre.SpeechRecognized +=
                 new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
@@ -34,7 +35,7 @@ namespace SydneyOverlay
             Choices c = new Choices(choices);
             GrammarBuilder gb = new GrammarBuilder(c);
             Grammar newGram = new Grammar(gb);
-            sre.LoadGrammar(newGram);
+            sre.LoadGrammarAsync(newGram);
             if (oldGram != null)
             {
                 sre.UnloadGrammar(oldGram);
@@ -69,7 +70,8 @@ namespace SydneyOverlay
             curWord = e.Result.Text;
         }
 
-        public void LoadgrammarCompletedHandler(object sender, LoadGrammarCompletedEventArgs e) { }
+        public void LoadgrammarCompletedHandler(object sender, LoadGrammarCompletedEventArgs e) { 
+        }
         
         public void StopVoiceCommands()
         {
