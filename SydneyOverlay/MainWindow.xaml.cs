@@ -444,11 +444,21 @@ namespace SydneyOverlay
                 Directory.CreateDirectory(newDir);
             }
             //Change name of file here
-            string newName = string.Format("{0} {1} {2:dd-MM-yyyy}.png",
+            string newName = string.Format("{0} {1} {2:dd-MM-yyyy}",
                 IDText.Text,
                 AreasComboBox.SelectedItem as string,
                 DateTime.Now);
 
+            //Check to see if the file already exists
+            string[] matchingFiles = Directory.GetFiles(newDir, newName + "*");
+            //Divide by two and floor as two files are created with each save
+            double groupedMatches = Math.Floor((double)matchingFiles.Length/2);
+            if (groupedMatches > 0)
+            {
+                //01 is already created, make 02
+                newName += string.Format(" {0:00}",groupedMatches+1);
+            }
+            newName += ".png";
             return System.IO.Path.Combine(newDir, newName);
 
             //
