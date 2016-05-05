@@ -433,6 +433,7 @@ namespace SydneyOverlay
         }
         private string GetSaveToFilePath(string imgFilePath)
         {
+            //checks for 'labelled images' directory in cur folder
             string directory = System.IO.Path.GetDirectoryName(imgFilePath);
             string[] labelsDir = Directory.GetDirectories(directory, "Labelled Images", SearchOption.TopDirectoryOnly);
             string newDir = System.IO.Path.Combine(directory, "Labelled Images");
@@ -441,17 +442,16 @@ namespace SydneyOverlay
                 //create a new folder
                 Directory.CreateDirectory(newDir);
             }
-            //Change name of filepath here
-            if (btnMediaExpressEnabled.IsChecked)
-            {
-                string newName = string.Format("{0} {1} {2:dd-MM-yyyy}.png",
-                    IDText.Text,
-                    AreasComboBox.SelectedItem as string,
-                    DateTime.Now);
+            //Change name of file here
+            string newName = string.Format("{0} {1} {2:dd-MM-yyyy}.png",
+                IDText.Text,
+                AreasComboBox.SelectedItem as string,
+                DateTime.Now);
 
-                return System.IO.Path.Combine(newDir, newName);
-            }
-            return System.IO.Path.Combine(newDir, System.IO.Path.GetFileName(imgFilePath));
+            return System.IO.Path.Combine(newDir, newName);
+
+            //
+            //return System.IO.Path.Combine(newDir, System.IO.Path.GetFileName(imgFilePath));
             //save to filpath
             //check for existing subfolder
             //check for existing image
