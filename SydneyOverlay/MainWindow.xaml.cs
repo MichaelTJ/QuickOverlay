@@ -230,6 +230,7 @@ namespace SydneyOverlay
                                  "10",
                                  "11",
                                  "12",
+                                 "Central"
                              };
 
             List<string> Locations = new List<string>(locations);
