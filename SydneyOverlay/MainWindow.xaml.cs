@@ -230,7 +230,8 @@ namespace SydneyOverlay
                                  "10",
                                  "11",
                                  "12",
-                                 "Central"
+                                 "Central",
+                                 "See Comments"
                              };
 
             List<string> Locations = new List<string>(locations);
@@ -444,10 +445,10 @@ namespace SydneyOverlay
                 Directory.CreateDirectory(newDir);
             }
             //Change name of file here
-            string newName = string.Format("{0} {1} {2:dd-MM-yyyy}",
+            string newName = string.Format("{0} {1} {2}",
                 IDText.Text,
                 AreasComboBox.SelectedItem as string,
-                DateTime.Now);
+                DateText.Text);
 
             //Check to see if the file already exists
             string[] matchingFiles = Directory.GetFiles(newDir, newName + "*");
