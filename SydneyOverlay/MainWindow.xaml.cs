@@ -445,10 +445,9 @@ namespace SydneyOverlay
                 Directory.CreateDirectory(newDir);
             }
             //Change name of file here
-            string newName = string.Format("{0} {1} {2}",
+            string newName = string.Format("{0} {1}",
                 IDText.Text,
-                AreasComboBox.SelectedItem as string,
-                DateText.Text);
+                AreasComboBox.SelectedItem as string);
 
             //Check to see if the file already exists
             string[] matchingFiles = Directory.GetFiles(newDir, newName + "*");
