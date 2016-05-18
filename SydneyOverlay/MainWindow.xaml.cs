@@ -397,17 +397,21 @@ namespace SydneyOverlay
             imageIn.Arrange(new Rect(new System.Windows.Size((int)imageIn.Source.Width, (int)imageIn.Source.Height)));
 
             rtBmp.Render(imageIn);
+            JpegBitmapEncoder jEncoder = new JpegBitmapEncoder();
+            MemoryStream stream = new MemoryStream();
+            jEncoder.Frames.Add(BitmapFrame.Create(rtBmp));
 
+            /*
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             MemoryStream stream = new MemoryStream();
             encoder.Frames.Add(BitmapFrame.Create(rtBmp));
-
+            */
             // Save to memory stream and create Bitamp from stream
-            encoder.Save(stream);
+            jEncoder.Save(stream);
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
 
             // Demonstrate that we can do something with the Bitmap
-            bitmap.Save(GetSaveToFilePath(filePath), ImageFormat.Png);
+            bitmap.Save(GetSaveToFilePath(filePath), ImageFormat.Jpeg);
 
 
 
@@ -458,7 +462,7 @@ namespace SydneyOverlay
                 //01 is already created, make 02
                 newName += string.Format(" {0:00}",groupedMatches+1);
             }
-            newName += ".png";
+            newName += ".jpg";
             return System.IO.Path.Combine(newDir, newName);
 
             //
