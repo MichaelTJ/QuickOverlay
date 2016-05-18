@@ -363,7 +363,7 @@ namespace SydneyOverlay
             TextContent.Text += string.Format("Date: {0}\n", DateText.Text);
             TextContent.Text += string.Format("Area: {0}\n", AreasComboBox.SelectedItem as string);
             TextContent.Text += string.Format("Issue: {0}\n", CriteriasComboBox.SelectedItem as string);
-            TextContent.Text += string.Format("Rating: {0}\n", RatingComboBox.Text);
+            //TextContent.Text += string.Format("Rating: {0}\n", RatingComboBox.Text);
             TextContent.Text += string.Format("Location: {0}:00\n", LocationComboBox.SelectedItem as string);
             TextContent.Text += string.Format("Comment/s:\n{0}\n", CommentsBox.Text);
             var visual = new DrawingVisual();
