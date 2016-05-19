@@ -829,5 +829,11 @@ namespace SydneyOverlay
             }
         }
 
+        private void btnCreateASAMReport_Click(object sender, RoutedEventArgs e)
+        {
+            ASAMSummary ASS = new ASAMSummary();
+            ASS.ShowDialog();
+        }
+
     }
 }

@@ -109,3 +109,5 @@ C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\
 C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\bin\Debug\BMDMediaExpressInterfaceWPF.pdb
 C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\bin\Debug\TargaImage.dll
 C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\bin\Debug\TargaImage.pdb
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\ASAMSummary.baml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\ASAMSummary.g.cs

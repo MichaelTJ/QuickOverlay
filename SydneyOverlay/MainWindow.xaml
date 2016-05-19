@@ -32,6 +32,10 @@
                           Click="btnMediaExpressEnabled_Click"
                           IsCheckable="True"/>
             </MenuItem>
+            <MenuItem Header="_Report">
+                <MenuItem Header="_Create ASAM Report" Name="btnCreateASAMReport"
+                              Click="btnCreateASAMReport_Click"/>
+            </MenuItem>
         </Menu>
         <DockPanel DockPanel.Dock="Left">
             <TextBlock DockPanel.Dock="Top" Text="Overlay Type:" 

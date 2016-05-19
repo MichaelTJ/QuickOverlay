@@ -1,0 +1,87 @@
+﻿<Window x:Class="SydneyOverlay.ASAMSummary"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ASAMSummary" Height="1000" Width="1000">
+    <ScrollViewer>
+    <StackPanel >
+
+            <TextBlock Text="External" Margin="10,10,10,10" FontSize="14"/>
+        <Grid>
+        <DataGrid Name="ASAMExternalData" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="150"/>
+                    <DataGridComboBoxColumn Width="100" x:Name="RatingIntColExt" Header="P Rating"
+                                        SelectedValueBinding="{Binding RatingInt,
+                    Mode=TwoWay}"
+                                        DisplayMemberPath="{Binding RatingInt}"/>
+                    <DataGridComboBoxColumn Width="100" x:Name="RatingFlagColExt" Header="Status"
+                                        SelectedValueBinding="{Binding RatingFlag,
+                    Mode=TwoWay}"
+                                        DisplayMemberPath="{Binding RatingFlag}"/>
+                    <DataGridTextColumn Binding="{Binding Comment}" Header="Comment" Width="*"/>
+                </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+            <DockPanel>
+            <TextBlock Text="External Summary:" Margin="10,10,10,10" DockPanel.Dock="Left"/>
+                <Button DockPanel.Dock="Left" Name="btnExtSum" Click="btnExtSum_Click" Margin="10,10,10,10">Fill Comments</Button>
+                <TextBlock></TextBlock>
+            </DockPanel>
+            <TextBox x:Name="CommentsExt" TextWrapping="Wrap" Margin="0,0,0,10"/>
+            <TextBlock Text="Internal" Margin="10,10,10,10" FontSize="14"/>
+        <Grid>
+            <DataGrid Name="ASAMInternalData" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="150"/>
+                    <DataGridComboBoxColumn Width="100" x:Name="RatingIntColInt" Header="P Rating"
+                                        SelectedValueBinding="{Binding RatingInt,
+                    Mode=TwoWay}"
+                                        DisplayMemberPath="{Binding RatingInt}"/>
+                    <DataGridComboBoxColumn Width="100" x:Name="RatingFlagColInt" Header="Status"
+                                        SelectedValueBinding="{Binding RatingFlag,
+                    Mode=TwoWay}"
+                                        DisplayMemberPath="{Binding RatingFlag}"/>
+                    <DataGridTextColumn Binding="{Binding Comment}" Header="Comment" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            </Grid>
+
+            <DockPanel>
+                <TextBlock Text="Internal Summary:" Margin="10,10,10,10"/>
+                <Button DockPanel.Dock="Left" Name="btnIntSum" Click="btnIntSum_Click" Margin="10,10,10,10">Fill Comments</Button>
+                <TextBlock></TextBlock>
+            </DockPanel>
+            <TextBox x:Name="CommentsInternal" TextWrapping="Wrap" Margin="0,0,0,10"/>
+            <TextBlock Text="General" Margin="10,20,10,10" FontSize="14"/>
+            <Grid>
+                <DataGrid Name="ASAMGeneralData" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="150"/>
+                        <DataGridComboBoxColumn Width="100" x:Name="RatingIntColGen" Header="P Rating"
+                                        SelectedValueBinding="{Binding RatingInt,
+                    Mode=TwoWay}"
+                                        DisplayMemberPath="{Binding RatingInt}"/>
+                        <DataGridComboBoxColumn Width="100" x:Name="RatingFlagColGen" Header="Status"
+                                        SelectedValueBinding="{Binding RatingFlag,
+                    Mode=TwoWay}"
+                                        DisplayMemberPath="{Binding RatingFlag}"/>
+                        <DataGridTextColumn Binding="{Binding Comment}" Header="Comment" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+
+            <DockPanel>
+                <TextBlock Text="General Summary:" Margin="10,10,10,10"/>
+                <Button DockPanel.Dock="Left" Name="btnGenSum" Click="btnGenSum_Click" Margin="10,10,10,10">Fill Comments</Button>
+                <TextBlock></TextBlock>
+            </DockPanel>
+            <TextBox x:Name="CommentsGeneral" TextWrapping="Wrap" Margin="0,0,0,10"/>
+            <DockPanel LastChildFill="False">
+                <Button DockPanel.Dock="Left" Name="btnSave" Click="btnSave_Click" Margin="10,10,10,10" Width="100">Save As</Button>
+                
+                <Button DockPanel.Dock="Right" Name="btnCancel" Click="btnCancel_Click" Margin="10,10,10,10" Width="100">Cancel</Button>
+            </DockPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

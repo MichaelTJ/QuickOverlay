@@ -81,6 +81,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AreasAndConditions.cs" />
+    <Compile Include="ASAMSummary.xaml.cs">
+      <DependentUpon>ASAMSummary.xaml</DependentUpon>
+    </Compile>
     <Compile Include="bmdmHack.cs" />
     <Compile Include="EditAsAndCs.xaml.cs">
       <DependentUpon>EditAsAndCs.xaml</DependentUpon>
@@ -92,6 +95,10 @@
       <DependentUpon>NewAAC.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpeechSifter.cs" />
+    <Page Include="ASAMSummary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="EditAsAndCs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
