@@ -81,6 +81,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AreasAndConditions.cs" />
+    <Compile Include="ASAMLoad.xaml.cs">
+      <DependentUpon>ASAMLoad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ASAMSummary.xaml.cs">
       <DependentUpon>ASAMSummary.xaml</DependentUpon>
     </Compile>
@@ -94,7 +97,15 @@
     <Compile Include="NewAAC.xaml.cs">
       <DependentUpon>NewAAC.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReportArea.cs" />
     <Compile Include="SpeechSifter.cs" />
+    <Compile Include="UnusedSummaries.xaml.cs">
+      <DependentUpon>UnusedSummaries.xaml</DependentUpon>
+    </Compile>
+    <Page Include="ASAMLoad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ASAMSummary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,6 +137,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UnusedSummaries.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

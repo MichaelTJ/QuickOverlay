@@ -44,6 +44,13 @@ namespace SydneyOverlay
             {
                 AreasListBox.Items.Add(s);
             }
+
+            //TODO:GetConditions doesn't need parameters anymore
+            ConditionsListBox.Items.Clear();
+            foreach (string s in AsAndCs.GetConditions("any"))
+            {
+                ConditionsListBox.Items.Add(s);
+            }
         }
 
         private void ConditionsListBox_MouseDown(object sender, MouseButtonEventArgs e)
@@ -131,7 +138,7 @@ namespace SydneyOverlay
                     EditText ET = new EditText(AsAndCs,
                         AreasListBox.SelectedItem as string,
                         ConditionsListBox.SelectedItem as string);
-                    ET.Show();
+                    ET.ShowDialog();
                     updateConditions();
                 }
             }
@@ -143,6 +150,7 @@ namespace SydneyOverlay
             {
                 EditText ET = new EditText(AsAndCs,
                     AreasListBox.SelectedItem as string);
+                ET.ShowDialog();
                 updateAreas();
             }
 

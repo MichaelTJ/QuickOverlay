@@ -33,6 +33,9 @@
                           IsCheckable="True"/>
             </MenuItem>
             <MenuItem Header="_Report">
+                <!--
+                <MenuItem Header="_Load ASAM Report" Name="btmLoadASAMReport"
+                          Click="btmLoadASAMReport_Click"/>-->
                 <MenuItem Header="_Create ASAM Report" Name="btnCreateASAMReport"
                               Click="btnCreateASAMReport_Click"/>
             </MenuItem>

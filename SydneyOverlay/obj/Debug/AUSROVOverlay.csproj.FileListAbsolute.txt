@@ -111,3 +111,7 @@ C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\
 C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\bin\Debug\TargaImage.pdb
 C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\ASAMSummary.baml
 C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\ASAMSummary.g.cs
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\ASAMLoad.baml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\ASAMLoad.g.cs
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\UnusedSummaries.baml
+C:\Users\Sandy\Documents\Visual Studio 2013\Projects\QuickOverlay\SydneyOverlay\obj\Debug\UnusedSummaries.g.cs

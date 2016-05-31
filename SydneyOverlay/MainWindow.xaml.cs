@@ -359,6 +359,7 @@ namespace SydneyOverlay
             if (image.Source == null) { return; }
             //TextContent is the text container with writing style for 
             //the black with white outline
+            
             TextContent.Text = string.Format("ID: {0} ", IDText.Text);
             TextContent.Text += string.Format("Date: {0}\n", DateText.Text);
             TextContent.Text += string.Format("Area: {0}\n", AreasComboBox.SelectedItem as string);
@@ -366,6 +367,8 @@ namespace SydneyOverlay
             //TextContent.Text += string.Format("Rating: {0}\n", RatingComboBox.Text);
             TextContent.Text += string.Format("Location: {0}:00\n", LocationComboBox.SelectedItem as string);
             TextContent.Text += string.Format("Comment/s:\n{0}\n", CommentsBox.Text);
+            int roughlyQuarterImageFactorForLengthOfDateString = 45;
+            TextContent.FontSize = image.Source.Width / (roughlyQuarterImageFactorForLengthOfDateString);
             var visual = new DrawingVisual();
             System.Windows.Media.Pen pen = new System.Windows.Media.Pen(System.Windows.Media.Brushes.Black, 1);
             using (DrawingContext drawingContext = visual.RenderOpen())
@@ -742,6 +745,13 @@ namespace SydneyOverlay
         private void Window_Closed(object sender, EventArgs e)
         {
             saveLocalJSON();
+            if (bmdm != null)
+            {
+                bmdm.Close();
+            }
+
+            //Still something running when I close normally
+            Environment.Exit(0);
         }
 
         private void OverlayComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -833,6 +843,12 @@ namespace SydneyOverlay
         {
             ASAMSummary ASS = new ASAMSummary();
             ASS.ShowDialog();
+        }
+
+        private void btmLoadASAMReport_Click(object sender, RoutedEventArgs e)
+        {
+            ASAMLoad asl = new ASAMLoad();
+            asl.ShowDialog();
         }
 
     }
