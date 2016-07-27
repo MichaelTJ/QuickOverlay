@@ -244,14 +244,30 @@ namespace SydneyOverlay
                             }
                         }
                     }
-                    issueSummary += string.Format("{0} at ",key);
+                    issueSummary += string.Format("{0} at ", UppercaseFirst(key));
                     //add list of names
                     foreach(string name in areas){
-                        issueSummary += name + ", ";
+                        if (areas.IndexOf(name) == areas.Count - 2)
+                        {
+                            issueSummary += name.ToLower() + " and ";
+                        }
+                        else if (areas.IndexOf(name) == areas.Count - 1)
+                        {
+                            issueSummary += name.ToLower();
+                        }
+                        else
+                        {
+                            issueSummary += name.ToLower() + ", ";
+                        }
                     }
-                    //remove comma and space
-                    issueSummary = issueSummary.Substring(0, issueSummary.Length - 2);
-                    issueSummary += ". " + justComments;
+                    if (string.IsNullOrEmpty(justComments))
+                    {
+                        issueSummary += ".";
+                    }
+                    else
+                    {
+                        issueSummary += ": " + justComments;
+                    }
 
                 }
                 else
@@ -262,7 +278,7 @@ namespace SydneyOverlay
                         {
                             if (raSub.Comment.StartsWith(key))
                             {
-                                issueSummary += string.Format("{0} at {1}", key, raSub.Name);
+                                issueSummary += string.Format("{0} at {1}", UppercaseFirst(key), raSub.Name.ToLower());
                                 string justComment = raSub.Comment.Substring(key.Length + 1).Trim();
                                 if (string.IsNullOrEmpty(justComment))
                                 {
@@ -289,6 +305,18 @@ namespace SydneyOverlay
             this.Comment = sortCommentsByRating(unSortedComments);
         }
 
+        private static string UppercaseFirst(string s)
+        {
+            // Check for empty string.
+            if (string.IsNullOrEmpty(s))
+            {
+                return string.Empty;
+            }
+
+            s = s.ToLower();
+            // Return char and concat substring.
+            return char.ToUpper(s[0]) + s.Substring(1);
+        }
 
         private string sortCommentsByRating(List<string> unsortedComments)
         {

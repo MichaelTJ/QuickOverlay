@@ -91,23 +91,22 @@ namespace SydneyOverlay
 
             btnOptionsVoiceEnabled.IsChecked = false;
 
-            bmdm = new BMDMediaExpressInterfaceWPF.MainWindow();
-            bmdm.Show();
-
-            //Add handler for new bmd images
-            bmdm.NewImage += bmdm_NewImage;
 
             Process[] prc = Process.GetProcessesByName("MediaExpress");
             if (prc.Length > 0)
             {
+                bmdm = new BMDMediaExpressInterfaceWPF.MainWindow();
+                bmdm.Show();
+
+                //Add handler for new bmd images
+                bmdm.NewImage += bmdm_NewImage;
+
                 MediaExpress = prc[0];
                 btnMediaExpressEnabled.IsChecked = true;
                 //checkbox in the options menu
                 
             }
             else { btnMediaExpressEnabled.IsChecked = false; }
-
-
 
         }
 

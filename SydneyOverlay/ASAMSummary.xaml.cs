@@ -150,7 +150,7 @@ namespace SydneyOverlay
                 else if (line.StartsWith("Issue: "))
                 {
                     //issue should always come before comments
-                    if (issue.StartsWith("None"))
+                    if (issue.StartsWith("None") || issue.StartsWith(@"N/A"))
                     {
                         issue = "";
                     }
@@ -242,20 +242,23 @@ namespace SydneyOverlay
         }
         private void InitMapping()
         {
+            //TODO: JSON this goddamn
+
             //Mapping list for AUSROV custom areas to ASAM areas
             ExternalMapping = new Dictionary<string, string>(){
                 {"Chlorination Hatch","Roof Hatches"},
                 {"Electrical","Electrical"},
                 {"External Coating","Walls"},
                 {"External Ladder","Ladder External"},
-                { "External Wall","Walls"},
+                {"External Wall","Walls"},
                 {"Floor Seal","Walls"},
-                {"Footpath","Walkways"},
+                {"Footpath","Compound"},
                 {"Handrail","Handrails"},
                 {"Hold down clamp","Walls"},
-                {"Level Indicator","Level indicator"},
+                {"Level Indicator","Level Indicator"},
                 {"Reservoir Profile","Compound"},
                 {"Roof Platform","Roof Platforms"},
+                {"Platform Area","Roof Platforms"},
                 {"Roof Sheets","Roof"},
                 {"Rooftop Entry Hatch","Entry Hatch"},
                 {"Rooftop Equipment Hatch","Roof Hatches"},
@@ -283,16 +286,31 @@ namespace SydneyOverlay
                 {"Pressure Valve","Walls"},
                 {"Roof Beam","Walls"},
                 {"External Structure","Walls"},
-{"Purlin","Roof"},
-{"Roof Spider","Roof"},
-{"Tap","Walls"},
-{"Chlorine Residual Analyser","Walls"},
-{"Foundation","Walls"},
-{"Valve Pit","Compound"},
-{"Vermin Proofing","Bird Proofing"}
-
-
+                {"Purlin","Roof"},
+                {"Roof Spider","Roof"},
+                {"Tap","Walls"},
+                {"Chlorine Residual Analyser","Walls"},
+                {"Foundation","Walls"},
+                {"Valve Pit","Compound"},
+                {"Vermin Proofing","Bird Proofing"},
+                {"Depth Gauge", "Walls"},
+                {"Dosing Point","Walls"},
+                {"Drain","Walkways"},
+                {"Leak Detection","Walls"},
+                {"Flashing","Roof"},
+                {"Roof Hatch","Roof"},
+                {"External Pipework","Compound"},
+{"Mixer Support Frame","Roof"},
+{"Rain Guage","Compound"},
+{"Rafter","Roof"},
+{"Re-Chlorination Line","Walls"},
+{"Side Access Hatch","Walls"},
+{"Tank Base","Walls"},
+{"Vandalism","Vandalism"},
+{"Ventilation Hatch","Roof Hatches"},
+{"Base Plate","Walls"}
             };
+
 
             InternalMapping = new Dictionary<string, string>(){
                 {"Column","Columns"},
@@ -331,7 +349,19 @@ namespace SydneyOverlay
 {"Chlorine Cannister","Supports"},
 {"Level Indicator","Supports"},
 {"Mixer Mast","Supports"},
-{"Davit","Supports"}
+{"Davit","Supports"},
+{"Chlorination Hatch","Roof Framing"},
+{"Depth Guage","Walls"},
+{"Internal Coating","Walls"},
+{"Internal Hydrant","Floor"},
+{"Mixer Base","Floor"},
+{"Dosing Line","Floor"},
+{"Internal Stairs","Ladder Internal"},
+{"Mixer Blades","Mixer Motor"},
+{"Purlin","Roof Framing"},
+{"Floor Seal","Floor"},
+{"Redundant Pipework","Walls"},
+{"Re-Chlorination Framing","Supports"}
 
             };
 
@@ -369,7 +399,7 @@ namespace SydneyOverlay
             ReportAreasExt.Add(new ReportArea() { Name = "Ventilation", RatingInt = "4", RatingFlag = "D", Comment = "Appears to be in good order" });
             ReportAreasExt.Add(new ReportArea() { Name = "Bird Proofing", RatingInt = "4", RatingFlag = "D", Comment = "Appears to be in good order" });
             ReportAreasExt.Add(new ReportArea() { Name = "Electrical", RatingInt = "4", RatingFlag = "D", Comment = "Appears to be in good order" });
-            ReportAreasExt.Add(new ReportArea() { Name = "Level indicator", RatingInt = "4", RatingFlag = "D", Comment = "Appears to be in good order" });
+            ReportAreasExt.Add(new ReportArea() { Name = "Level Indicator", RatingInt = "4", RatingFlag = "D", Comment = "Appears to be in good order" });
 
 
             ReportAreasInt.Add(new ReportArea() { Name = "Walls", RatingInt = "4", RatingFlag = "D", Comment = "Appears to be in good order" });

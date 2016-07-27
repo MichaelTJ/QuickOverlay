@@ -33,9 +33,9 @@
                           IsCheckable="True"/>
             </MenuItem>
             <MenuItem Header="_Report">
-                <!--
+                
                 <MenuItem Header="_Load ASAM Report" Name="btmLoadASAMReport"
-                          Click="btmLoadASAMReport_Click"/>-->
+                          Click="btmLoadASAMReport_Click"/>
                 <MenuItem Header="_Create ASAM Report" Name="btnCreateASAMReport"
                               Click="btnCreateASAMReport_Click"/>
             </MenuItem>
@@ -125,6 +125,7 @@
             <TextBlock DockPanel.Dock="Top" Text="Comments:" 
                 Margin="10,10,0,0"/>
             <TextBox 
+                SpellCheck.IsEnabled="True"
                 Name="CommentsBox"
                 AcceptsReturn="True"
                 TextWrapping="WrapWithOverflow"
