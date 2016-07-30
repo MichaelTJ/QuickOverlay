@@ -303,6 +303,10 @@ namespace SydneyOverlay
             }
             //else no issues
             this.Comment = sortCommentsByRating(unSortedComments);
+            if (string.IsNullOrWhiteSpace(this.Comment))
+            {
+                this.Comment = "Appears to be in good order.";
+            }
         }
 
         private static string UppercaseFirst(string s)

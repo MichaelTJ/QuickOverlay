@@ -48,6 +48,13 @@ namespace SydneyOverlay
                 AsAndCs[s].Add(conditions[RandString.Next(0, conditions.Length)]);
                 AsAndCs[s].Add(conditions[RandString.Next(0, conditions.Length)]);
             }*/
+            sortAreasAndConditions();
+        }
+
+        public void sortAreasAndConditions()
+        {
+            Areas = Areas.OrderBy(a => a).ToList();
+            Conditions = Conditions.OrderBy(a => a).ToList();
         }
 
         public AreasAndConditions(string titleIn, List<string> areas, List<string> conditions)
@@ -56,6 +63,7 @@ namespace SydneyOverlay
             this.Areas = areas;
             this.Conditions = conditions;
             //AsAndCs = AsAndCsIn;
+            sortAreasAndConditions();
         }
 
         

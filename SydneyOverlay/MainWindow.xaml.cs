@@ -352,6 +352,50 @@ namespace SydneyOverlay
 
 
         #region Functions
+        /// <summary>
+        /// Left justifyies... poorly 
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="lineLen"></param>
+        /// <returns></returns>
+        private string ConvertCommentToSeperateLines(string comment, int lineLen)
+        {
+            string[] words = comment.Split(' ');
+
+            StringBuilder allLines = new StringBuilder();
+            StringBuilder sbCurLine = new StringBuilder();
+
+            foreach (string word in words)
+            {
+                //getting those manual enters sorted
+                if(word.Contains("\r\n")){
+                    int index = word.IndexOf("\r\n");
+                    string preNewLine = word.Substring(0,index);
+                    //add pre 
+                    sbCurLine.Append(preNewLine);
+                    allLines.AppendLine(sbCurLine.ToString());
+                    
+                    sbCurLine = new StringBuilder();
+                    string postNewLine = "";
+                    if(index+4 <= word.Length){
+                        postNewLine = word.Substring(index+2,word.Length-(index+2));
+                        sbCurLine.Append(postNewLine);
+                        sbCurLine.Append(' ');
+                    }
+                }
+
+                //automatic newlining
+                if ((sbCurLine.Length%lineLen + word.Length + 1) >= lineLen)
+                {
+                    allLines.AppendLine(sbCurLine.ToString());
+                    sbCurLine = new StringBuilder();
+                    
+                }
+                sbCurLine.Append(word);
+                sbCurLine.Append(' ');
+            }
+            return allLines.ToString();
+        }
         private void WriteComment(System.Windows.Controls.Image image)
         {
 
@@ -365,6 +409,8 @@ namespace SydneyOverlay
             TextContent.Text += string.Format("Issue: {0}\n", CriteriasComboBox.SelectedItem as string);
             //TextContent.Text += string.Format("Rating: {0}\n", RatingComboBox.Text);
             TextContent.Text += string.Format("Location: {0}:00\n", LocationComboBox.SelectedItem as string);
+            //TODO:Use for auto justifying comments
+            //int goodCommentWidth = 28;
             TextContent.Text += string.Format("Comment/s:\n{0}\n", CommentsBox.Text);
             int roughlyQuarterImageFactorForLengthOfDateString = 45;
             TextContent.FontSize = image.Source.Width / (roughlyQuarterImageFactorForLengthOfDateString);
@@ -534,6 +580,7 @@ namespace SydneyOverlay
 
                 //update speech choices
                 List<string> nextBoxItems = new List<string>();
+
                 foreach (string s in nextBox.Items)
                 {
                     nextBoxItems.Add(s);
@@ -631,6 +678,7 @@ namespace SydneyOverlay
         {
             EditAsAndCs eaas = new EditAsAndCs(AandC);
             eaas.ShowDialog();
+            AandC.sortAreasAndConditions();
             ResetComboBoxes();
         }
 
@@ -659,8 +707,6 @@ namespace SydneyOverlay
         #region SavingAndLoading
         private void saveLocalJSON()
         {
-
-            
             var fileName = System.IO.Path.Combine(Environment.GetFolderPath(
                 Environment.SpecialFolder.ApplicationData), "AUSROV", "AreasAndConditions.txt");
             MemoryStream ms = new System.IO.MemoryStream();
@@ -671,7 +717,6 @@ namespace SydneyOverlay
             {
                 ser.Serialize(writer, AandCList);
             }
-
         }
         private void LoadLocalJSON()
         {
@@ -736,6 +781,10 @@ namespace SydneyOverlay
                 //Adds the default areas and conditions to the pprogram
                 AandCList.Add(new AreasAndConditions());
             }
+            else
+            {
+                sortAACCollection(AandCList);
+            }
             
         }
         #endregion
@@ -762,6 +811,7 @@ namespace SydneyOverlay
         {
             dontRunSelectionChanged = true;
             AandC = AandCList[OverlayComboBox.SelectedIndex];
+            AreasComboBox.ItemsSource = null;
             AreasComboBox.ItemsSource = AandC.GetAreas();
             CriteriasComboBox.ItemsSource = new string[] { "Select an Area" };
             //comboBox.SelectedIndex = 0;
@@ -850,5 +900,12 @@ namespace SydneyOverlay
             asl.ShowDialog();
         }
 
+        private void sortAACCollection(ObservableCollection<AreasAndConditions> AACList)
+        {
+            var sortableList = new List<AreasAndConditions>(AACList);
+            sortableList.OrderByDescending(a => a.Title);
+            //sortableList.Sort((a, b) => { return a.Title.CompareTo(b); });
+            ObservableCollection<AreasAndConditions> outAAC = new ObservableCollection<AreasAndConditions>(sortableList);
+        }
     }
 }

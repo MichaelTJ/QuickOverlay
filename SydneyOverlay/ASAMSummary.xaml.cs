@@ -240,6 +240,7 @@ namespace SydneyOverlay
             RatingIntColGen.ItemsSource = RatingInts;
 
         }
+
         private void InitMapping()
         {
             //TODO: JSON this goddamn
@@ -300,15 +301,29 @@ namespace SydneyOverlay
                 {"Flashing","Roof"},
                 {"Roof Hatch","Roof"},
                 {"External Pipework","Compound"},
-{"Mixer Support Frame","Roof"},
-{"Rain Guage","Compound"},
-{"Rafter","Roof"},
-{"Re-Chlorination Line","Walls"},
-{"Side Access Hatch","Walls"},
-{"Tank Base","Walls"},
-{"Vandalism","Vandalism"},
-{"Ventilation Hatch","Roof Hatches"},
-{"Base Plate","Walls"}
+                {"Mixer Support Frame","Roof"},
+                {"Rain Guage","Compound"},
+                {"Rafter","Roof"},
+                {"Re-Chlorination Line","Walls"},
+                {"Side Access Hatch","Walls"},
+                {"Tank Base","Walls"},
+                {"Vandalism","Vandalism"},
+                {"Ventilation Hatch","Roof Hatches"},
+                {"Base Plate","Walls"},
+                {"Access Door","Walls"},
+                {"Internal Roof","Roof"},
+                {"Internal Stairs","Ladder External"},
+                {"Internal Wall","Walls"},
+                {"Walls","Walls"},
+                {"Dives Outlet","Walls"},
+                {"Pressure Transmitter","Electrical"},
+                {"Mixer Mast","Supports"},
+                {"Bottom Ring Beam","Walkways"},
+                {"Internal Ladder","Ladder External"},
+                {"Rooftop Hatch","Roof Hatches"},
+                {"Support Legs","Walls"},
+                {"Support Structure","Walls"},
+                {"Ventilation","Ventilation"}
             };
 
 
@@ -340,28 +355,34 @@ namespace SydneyOverlay
                 {"Side Access Hatch","Walls"},
                 {"Ventilation","Roof Framing"},
                 {"Wall Roof Interface","Walls"},
-{"Emergency Hatch","Roof Framing"},
-{"Pressure Guage","Walls"},
-{"Tap","Walls"},
-{"Instrument Hatch","Roof Framing"},
-{"Sample or Dosing Point","Walls"},
-{"Cathodic Protection","Electrical"},
-{"Chlorine Cannister","Supports"},
-{"Level Indicator","Supports"},
-{"Mixer Mast","Supports"},
-{"Davit","Supports"},
-{"Chlorination Hatch","Roof Framing"},
-{"Depth Guage","Walls"},
-{"Internal Coating","Walls"},
-{"Internal Hydrant","Floor"},
-{"Mixer Base","Floor"},
-{"Dosing Line","Floor"},
-{"Internal Stairs","Ladder Internal"},
-{"Mixer Blades","Mixer Motor"},
-{"Purlin","Roof Framing"},
-{"Floor Seal","Floor"},
-{"Redundant Pipework","Walls"},
-{"Re-Chlorination Framing","Supports"}
+                {"Emergency Hatch","Roof Framing"},
+                {"Pressure Guage","Walls"},
+                {"Tap","Walls"},
+                {"Instrument Hatch","Roof Framing"},
+                {"Sample or Dosing Point","Walls"},
+                {"Cathodic Protection","Electrical"},
+                {"Chlorine Cannister","Supports"},
+                {"Level Indicator","Supports"},
+                {"Mixer Mast","Supports"},
+                {"Davit","Supports"},
+                {"Chlorination Hatch","Roof Framing"},
+                {"Depth Guage","Walls"},
+                {"Internal Coating","Walls"},
+                {"Internal Hydrant","Floor"},
+                {"Mixer Base","Floor"},
+                {"Dosing Line","Floor"},
+                {"Internal Stairs","Ladder Internal"},
+                {"Mixer Blades","Mixer Motor"},
+                {"Purlin","Roof Framing"},
+                {"Floor Seal","Floor"},
+                {"Redundant Pipework","Walls"},
+                {"Re-Chlorination Framing","Supports"},
+                {"Chlorine Dosing Line","Supports"},
+                {"Dives Outlet","Walls"},
+                {"Chlorine Residual Return","Inlet"},
+                {"Flow Meter","Electrical"},
+                {"Equipment Hatch","Roof Framing"},
+                {"Instruments","Supports"}
 
             };
 
