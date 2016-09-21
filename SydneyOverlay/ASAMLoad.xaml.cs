@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.IO;
 
 namespace SydneyOverlay
 {
@@ -19,34 +20,48 @@ namespace SydneyOverlay
     /// </summary>
     public partial class ASAMLoad : Window
     {
-        private bool isTesting = true;
         public ASAMLoad()
         {
             InitializeComponent();
-            if (isTesting)
-            {
-                txtBoxExternal.Text = @"C:\Users\Sandy\Documents\AUS-ROV\014.WS0269 Minchinbury\WS0269 Externals\Labelled Images";
-                txtBoxInternal.Text = @"C:\Users\Sandy\Documents\AUS-ROV\014.WS0269 Minchinbury\WS0269 Internals\Labelled Images";
-            }
+            txtSuperFolder.Text = "";
+
         }
 
-        private void btnBrowseInternal_Click(object sender, RoutedEventArgs e)
+        private void btnBrowseSuperFolder_Click(object sender, RoutedEventArgs e)
         {
-            SetBrowseText(txtBoxInternal);
+            SetBrowseText(txtSuperFolder);
         }
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrEmpty(txtBoxExternal.Text) ||
-                string.IsNullOrEmpty(txtBoxInternal.Text))
+            string externalLabelledPath = "";
+            string internalLabelledPath = "";
+
+            //go into each folder
+            foreach (string IntsExtsPath in Directory.GetDirectories(txtSuperFolder.Text))
+            {
+                //get the Labelled Images folder
+                foreach (string labelledImagePath in Directory.GetDirectories(IntsExtsPath, "Labelled Images"))
+                {
+
+                    if (IntsExtsPath.Contains("External"))
+                    {
+                        externalLabelledPath = labelledImagePath;
+                    }
+                    else if (IntsExtsPath.Contains("Internal"))
+                    {
+                        internalLabelledPath = labelledImagePath;
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(externalLabelledPath) ||
+                string.IsNullOrEmpty(internalLabelledPath))
             {
                 System.Windows.MessageBox.Show("Either internal or external folder paths in empty");
             }
-            else
-            {
-                ASAMSummary summary = new ASAMSummary(txtBoxExternal.Text,txtBoxInternal.Text);
-                summary.ShowDialog();
-            }
+            ASAMSummary summary = new ASAMSummary(externalLabelledPath, internalLabelledPath);
+            summary.ShowDialog();
+
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -54,10 +69,6 @@ namespace SydneyOverlay
             this.Close();
         }
 
-        private void btnBrowseExternal_Click(object sender, RoutedEventArgs e)
-        {
-            SetBrowseText(txtBoxExternal);
-        }
 
         private void SetBrowseText(System.Windows.Controls.TextBox txtBox)
         {

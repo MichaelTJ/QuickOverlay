@@ -16,8 +16,11 @@ namespace SydneyOverlay
         private Grammar oldGram;
         public SpeechSifter() { 
             sre = new SpeechRecognitionEngine();
-
-            sre.SetInputToDefaultAudioDevice();
+            try
+            {
+                sre.SetInputToDefaultAudioDevice();
+            }
+            catch { }
             sre.RecognizeCompleted += 
                 new EventHandler<RecognizeCompletedEventArgs>(RecognizeCompletedHandler);
             sre.LoadGrammarCompleted += new EventHandler<LoadGrammarCompletedEventArgs>(LoadgrammarCompletedHandler);

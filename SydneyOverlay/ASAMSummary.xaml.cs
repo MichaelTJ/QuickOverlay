@@ -323,7 +323,14 @@ namespace SydneyOverlay
                 {"Rooftop Hatch","Roof Hatches"},
                 {"Support Legs","Walls"},
                 {"Support Structure","Walls"},
-                {"Ventilation","Ventilation"}
+                {"Ventilation","Ventilation"},
+                {"Chlorine Dosing Line","Walls"},
+                {"Inlet Outlet","Walls"},
+                {"Wall Roof Interface","Walls"},
+                {"Internal Coating","Walls"},
+                {"Vehicle Access","Compound"},
+                {"Pressure Guage", "Compound"},
+                {"Valve", "Walls"}
             };
 
 
@@ -382,7 +389,19 @@ namespace SydneyOverlay
                 {"Chlorine Residual Return","Inlet"},
                 {"Flow Meter","Electrical"},
                 {"Equipment Hatch","Roof Framing"},
-                {"Instruments","Supports"}
+                {"Instruments","Supports"},
+                {"Internal Pipework","Walls"},
+                {"Redundant Component","Supports"},
+                {"Inlet Outlet","Inlet"},
+                {"Reservoir Balance Line ","Inlet"},
+                {"Rooftop Hatch","Roof Framing"},
+                {"Ventilation Hatch","Roof Framing"},
+                {"Vermin Proofing","Floor"},
+                {"Chlorine Canister","Support"},
+                {"Electrical","Electrical"},
+                {"Top Ring Beam","Walls"}
+
+
 
             };
 
